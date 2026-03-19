@@ -4,6 +4,8 @@ import type {
   PlayerState, Phase, MinibossCard,
 } from '../data/types';
 import { createInitialState } from '../engine/game-state';
+import { showToast } from '../ui/components/Toast';
+import { SoundManager } from '../utils/sound';
 import {
   executeTownPhase, executeBuildPhase, executeBaitPhase,
   executeAdventurePhase, executeEndPhase, validateBuild,
@@ -52,6 +54,9 @@ export const useGameStore = create<GameStore>((set, get) => ({
     for (let i = 1; i < state.players.length; i++) {
       state.players[i].name = aiBosses[i - 1].name;
     }
+
+    SoundManager.play('levelUp');
+    showToast(`Playing as ${humanBoss.name}!`, 'success');
 
     set({
       screen: 'playing',
@@ -143,6 +148,9 @@ export const useGameStore = create<GameStore>((set, get) => ({
     }
     resolveSpellStack(state);
 
+    SoundManager.play('cardPlay');
+    showToast(`Built ${roomCard.name}`, 'info', 2000);
+
     state.currentPhase = 'bait';
     set({ state: { ...state } });
   },
@@ -173,6 +181,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
     player.hand.splice(idx, 1);
     pushSpell(state, player.id, spell);
     resolveSpellStack(state);
+    SoundManager.play('spellCast');
+    showToast(`Cast ${spell.name}!`, 'info', 2000);
     set({ state: { ...state } });
   },
 
