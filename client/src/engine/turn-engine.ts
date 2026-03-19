@@ -1,11 +1,11 @@
 import type {
-  GameState, PlayerState, RoomCard, DungeonRoom, HeroInstance, Phase,
+  GameState, RoomCard, DungeonRoom, HeroInstance,
 } from '../data/types';
 import {
-  addToLog, isDungeonFull, getRoomsInHand, getSoulCount, getWoundCount,
+  addToLog, isDungeonFull,
 } from './game-state';
 import { calculateLuring } from './treasure-calculator';
-import { resolveHeroCombat, processAdventureForPlayer } from './combat-resolver';
+import { processAdventureForPlayer } from './combat-resolver';
 import { resolveOnBuildEffect, resolveBossLevelUp } from './effect-resolver';
 import { resolveSpellStack } from './spell-stack';
 import { checkWinCondition } from './win-condition';

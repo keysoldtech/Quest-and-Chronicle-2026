@@ -1,10 +1,9 @@
 import type {
-  GameState, GameConfig, PlayerState, Decks, DiscardPiles,
-  BossCard, RoomCard, SpellCard, HeroCard, HeroInstance,
+  GameState, GameConfig, PlayerState,
+  BossCard, RoomCard, SpellCard,
   DungeonRoom, Phase,
 } from '../data/types';
 import { CardDatabase } from '../data/database';
-import { shuffle } from '../utils/shuffle';
 
 export function createInitialState(config: GameConfig, bosses: BossCard[]): GameState {
   const db = new CardDatabase(config.expansions);

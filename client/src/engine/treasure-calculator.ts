@@ -1,4 +1,4 @@
-import type { GameState, HeroInstance, PlayerState, TreasureType } from '../data/types';
+import type { GameState, PlayerState, TreasureType } from '../data/types';
 import { getTreasureCount } from './game-state';
 
 export interface LureResult {

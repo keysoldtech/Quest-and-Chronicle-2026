@@ -1,4 +1,4 @@
-import type { GameState, PlayerState } from '../data/types';
+import type { GameState } from '../data/types';
 import { getSoulCount, getWoundCount, getNetScore } from './game-state';
 
 export interface WinCheckResult {

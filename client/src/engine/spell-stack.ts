@@ -1,4 +1,4 @@
-import type { GameState, SpellCard, PlayerState, PendingSpell, CardEffect } from '../data/types';
+import type { GameState, SpellCard, PendingSpell } from '../data/types';
 import { addToLog } from './game-state';
 import { drawCards } from '../utils/shuffle';
 

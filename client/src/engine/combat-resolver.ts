@@ -1,7 +1,7 @@
 import type {
-  GameState, PlayerState, HeroInstance, DungeonRoom, HeroCard,
+  GameState, PlayerState, HeroInstance,
 } from '../data/types';
-import { addToLog, getSoulCount, getWoundCount } from './game-state';
+import { addToLog } from './game-state';
 
 export interface CombatEvent {
   type: 'enter_room' | 'take_damage' | 'room_ability' | 'hero_died' | 'hero_survived' | 'spell_window';
@@ -23,7 +23,7 @@ export interface CombatResult {
  * Hero enters Room 0 (entrance, farthest from boss) and moves toward higher indices.
  */
 export function resolveHeroCombat(
-  state: GameState,
+  _state: GameState,
   player: PlayerState,
   hero: HeroInstance,
 ): CombatResult {

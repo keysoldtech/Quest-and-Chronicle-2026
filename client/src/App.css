@@ -1,184 +1,323 @@
-.counter {
-  font-size: 16px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border: 2px solid transparent;
-  transition: border-color 0.3s;
-  margin-bottom: 24px;
+/* ── Reset & Base ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  &:hover {
-    border-color: var(--accent-border);
-  }
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
+:root {
+  --bg-dark: #1a1a2e;
+  --bg-medium: #16213e;
+  --bg-light: #0f3460;
+  --bg-card: #2a2a4a;
+  --text-primary: #e0e0e0;
+  --text-secondary: #a0a0c0;
+  --text-muted: #666688;
+  --accent-gold: #f5c542;
+  --accent-red: #e74c3c;
+  --accent-green: #2ecc71;
+  --accent-blue: #3498db;
+  --accent-purple: #9b59b6;
+  --border: #3a3a5e;
+  --border-highlight: #5a5a8e;
+  --card-monster: #4a1a2e;
+  --card-trap: #1a2e4a;
+  --card-boss: #3e2e1a;
+  --card-hero: #1a3e2e;
+  --card-spell: #2e1a3e;
+  --card-selected: #f5c542;
+  --shadow: 0 2px 8px rgba(0,0,0,0.4);
+  --radius: 6px;
+  --font-main: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
-.hero {
-  position: relative;
-
-  .base,
-  .framework,
-  .vite {
-    inset-inline: 0;
-    margin: 0 auto;
-  }
-
-  .base {
-    width: 170px;
-    position: relative;
-    z-index: 0;
-  }
-
-  .framework,
-  .vite {
-    position: absolute;
-  }
-
-  .framework {
-    z-index: 1;
-    top: 34px;
-    height: 28px;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
-      scale(1.4);
-  }
-
-  .vite {
-    z-index: 0;
-    top: 107px;
-    height: 26px;
-    width: auto;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
-      scale(0.8);
-  }
+body {
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  font-family: var(--font-main);
+  font-size: 14px;
+  line-height: 1.4;
+  overflow-x: hidden;
 }
 
-#center {
+.app {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  place-content: center;
-  place-items: center;
-  flex-grow: 1;
-
-  @media (max-width: 1024px) {
-    padding: 32px 20px 24px;
-    gap: 18px;
-  }
 }
 
-#next-steps {
-  display: flex;
-  border-top: 1px solid var(--border);
-  text-align: left;
-
-  & > div {
-    flex: 1 1 0;
-    padding: 32px;
-    @media (max-width: 1024px) {
-      padding: 24px 20px;
-    }
-  }
-
-  .icon {
-    margin-bottom: 16px;
-    width: 22px;
-    height: 22px;
-  }
-
-  @media (max-width: 1024px) {
-    flex-direction: column;
-    text-align: center;
-  }
+/* ── Buttons ───────────────────────────────────────────────────── */
+.btn {
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-medium);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.15s ease;
+  font-family: inherit;
 }
+.btn:hover { background: var(--bg-light); border-color: var(--border-highlight); }
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: var(--accent-blue); border-color: var(--accent-blue); color: #fff; font-weight: 600; }
+.btn-primary:hover { background: #2980b9; }
+.btn-primary:disabled { background: var(--text-muted); cursor: not-allowed; opacity: 0.6; }
+.btn-secondary { background: transparent; border-color: var(--border-highlight); }
+.btn-active { background: var(--accent-gold); color: #1a1a2e; border-color: var(--accent-gold); font-weight: 600; }
+.btn-large { padding: 12px 32px; font-size: 16px; }
+.btn-disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-build { background: var(--accent-green); border-color: var(--accent-green); color: #fff; }
+.btn-build:hover { background: #27ae60; }
+.btn-cancel { background: var(--accent-red); border-color: var(--accent-red); color: #fff; }
 
-#docs {
-  border-right: 1px solid var(--border);
-
-  @media (max-width: 1024px) {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
-}
-
-#next-steps ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  gap: 8px;
-  margin: 32px 0 0;
-
-  .logo {
-    height: 18px;
-  }
-
-  a {
-    color: var(--text-h);
-    font-size: 16px;
-    border-radius: 6px;
-    background: var(--social-bg);
-    display: flex;
-    padding: 6px 12px;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: box-shadow 0.3s;
-
-    &:hover {
-      box-shadow: var(--shadow);
-    }
-    .button-icon {
-      height: 18px;
-      width: 18px;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    li {
-      flex: 1 1 calc(50% - 8px);
-    }
-
-    a {
-      width: 100%;
-      justify-content: center;
-      box-sizing: border-box;
-    }
-  }
-}
-
-#spacer {
-  height: 88px;
-  border-top: 1px solid var(--border);
-  @media (max-width: 1024px) {
-    height: 48px;
-  }
-}
-
-.ticks {
+/* ── Cards (shared) ────────────────────────────────────────────── */
+.card {
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px;
+  min-width: 140px;
+  max-width: 180px;
+  font-size: 12px;
+  transition: all 0.15s ease;
+  cursor: default;
   position: relative;
-  width: 100%;
+}
+.card[role="button"] { cursor: pointer; }
+.card[role="button"]:hover { border-color: var(--border-highlight); transform: translateY(-2px); box-shadow: var(--shadow); }
+.card-selected { border-color: var(--card-selected) !important; box-shadow: 0 0 12px rgba(245, 197, 66, 0.4); }
+.card-disabled { opacity: 0.5; pointer-events: none; }
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: -4.5px;
-    border: 5px solid transparent;
-  }
+.card-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 4px; gap: 4px;
+}
+.card-name { font-weight: 700; font-size: 13px; flex: 1; }
+.card-xp { font-size: 11px; color: var(--accent-gold); font-weight: 600; }
+.card-damage { color: var(--accent-red); font-weight: 700; }
+.card-hp { color: var(--accent-green); font-weight: 700; }
+.card-subtitle { font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; font-style: italic; }
+.card-treasure { margin: 4px 0; }
+.card-class { font-size: 11px; text-transform: capitalize; color: var(--text-secondary); }
+.card-ability { font-size: 11px; color: var(--text-primary); margin: 6px 0; padding: 4px; background: rgba(0,0,0,0.2); border-radius: 3px; line-height: 1.3; }
+.card-flavor { font-size: 10px; color: var(--text-muted); font-style: italic; margin-top: 4px; }
+.card-type-badge { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+.card-phase-icon { font-size: 14px; }
 
-  &::before {
-    left: 0;
-    border-left-color: var(--border);
-  }
-  &::after {
-    right: 0;
-    border-right-color: var(--border);
-  }
+.card-room-monster { border-left: 3px solid var(--accent-red); }
+.card-room-trap { border-left: 3px solid var(--accent-blue); }
+.card-advanced { border-color: var(--accent-gold); }
+.card-boss { border-left: 3px solid var(--accent-gold); background: linear-gradient(135deg, var(--card-boss), var(--bg-card)); }
+.card-hero { border-left: 3px solid var(--accent-green); }
+.card-hero-epic { border-left: 3px solid var(--accent-purple); }
+.epic-badge { color: var(--accent-purple); font-weight: 700; }
+.card-spell { border-left: 3px solid var(--accent-purple); background: linear-gradient(135deg, var(--card-spell), var(--bg-card)); }
+
+.treasure-icon { font-size: 16px; font-weight: bold; margin: 0 2px; }
+.damage-icon { color: var(--accent-red); }
+.hp-icon { color: var(--accent-green); }
+
+.card-back {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 80px; background: var(--bg-medium);
+  border: 2px solid var(--border); border-radius: var(--radius);
+  min-width: 60px;
+}
+.card-back-label { color: var(--text-muted); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+
+/* ── Dungeon View ──────────────────────────────────────────────── */
+.dungeon-view {
+  background: var(--bg-medium);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  margin: 6px 0;
+}
+.dungeon-human { border-color: var(--accent-blue); }
+.dungeon-header {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
+}
+.dungeon-player-name { font-weight: 700; font-size: 15px; }
+.dungeon-scores { display: flex; gap: 12px; font-size: 13px; }
+.score-souls { color: var(--accent-gold); }
+.score-wounds { color: var(--accent-red); }
+.score-coins { color: var(--accent-gold); }
+
+.dungeon-boss { margin-bottom: 8px; }
+.boss-compact {
+  display: flex; gap: 8px; align-items: center;
+  padding: 6px 10px; background: rgba(0,0,0,0.2);
+  border-radius: var(--radius); font-size: 13px;
+}
+.boss-name { font-weight: 700; color: var(--accent-gold); }
+.boss-xp { color: var(--text-secondary); font-size: 11px; }
+.boss-leveled { color: var(--accent-gold); font-size: 11px; }
+
+.dungeon-rooms {
+  display: flex; gap: 6px; overflow-x: auto; padding: 4px 0;
+  min-height: 60px; align-items: stretch;
+}
+.dungeon-empty { color: var(--text-muted); font-style: italic; padding: 16px; text-align: center; flex: 1; }
+
+.dungeon-room {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px;
+  min-width: 100px;
+  max-width: 130px;
+  flex-shrink: 0;
+  font-size: 12px;
+  position: relative;
+}
+.room-deactivated { opacity: 0.4; border-style: dashed; }
+.room-position { font-size: 10px; color: var(--text-muted); }
+.room-name { font-weight: 600; font-size: 12px; margin: 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.room-stats { display: flex; gap: 6px; align-items: center; font-size: 12px; }
+.room-ability-hint { position: absolute; top: 4px; right: 6px; font-size: 12px; cursor: help; }
+.room-miniboss { font-size: 10px; color: var(--accent-purple); margin-top: 2px; }
+
+.dungeon-stats { font-size: 11px; color: var(--text-secondary); display: flex; gap: 12px; margin-top: 6px; }
+.dungeon-compact .card-boss { display: none; }
+
+/* ── Town ──────────────────────────────────────────────────────── */
+.town-view {
+  background: var(--bg-medium); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 12px; margin: 6px 0;
+}
+.town-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.town-header h3 { font-size: 15px; }
+.deck-counts { display: flex; gap: 12px; font-size: 12px; color: var(--text-secondary); }
+.town-heroes { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0; min-height: 50px; }
+.town-empty { color: var(--text-muted); font-style: italic; padding: 12px; }
+
+/* ── Hand ──────────────────────────────────────────────────────── */
+.hand-view {
+  background: var(--bg-medium); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 12px; margin: 6px 0;
+}
+.hand-header { margin-bottom: 8px; }
+.hand-header h3 { font-size: 15px; }
+.hand-sections { display: flex; gap: 16px; flex-wrap: wrap; }
+.hand-section h4 { font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; }
+.hand-cards { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0; flex-wrap: wrap; }
+
+/* ── Adventure Log ─────────────────────────────────────────────── */
+.adventure-log {
+  background: var(--bg-medium); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 12px; margin: 6px 0;
+  max-height: 200px; overflow-y: auto;
+}
+.adventure-log h3 { font-size: 15px; margin-bottom: 8px; }
+.log-entries { display: flex; flex-direction: column; gap: 3px; }
+.log-entry { font-size: 12px; padding: 3px 6px; border-radius: 3px; background: rgba(0,0,0,0.15); }
+.log-kill { color: var(--accent-green); background: rgba(46, 204, 113, 0.1); }
+.log-wound { color: var(--accent-red); background: rgba(231, 76, 60, 0.1); }
+.log-soul { color: var(--accent-gold); background: rgba(245, 197, 66, 0.1); }
+.log-damage { color: var(--accent-red); }
+.log-lure { color: var(--accent-blue); }
+
+/* ── Build Slots ───────────────────────────────────────────────── */
+.build-slots {
+  background: rgba(0,0,0,0.3); border: 1px solid var(--accent-gold);
+  border-radius: var(--radius); padding: 12px; margin: 8px 0;
+}
+.build-slots-label { font-weight: 600; margin-bottom: 8px; color: var(--accent-gold); }
+.build-slot-options { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* ── Phase Bar ─────────────────────────────────────────────────── */
+.phase-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 16px;
+  background: linear-gradient(180deg, var(--bg-light), var(--bg-medium));
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 10;
+}
+.round-counter { font-size: 13px; color: var(--text-secondary); }
+.phase-label { font-size: 16px; font-weight: 700; color: var(--accent-gold); }
+.deck-info { font-size: 12px; color: var(--text-secondary); }
+
+/* ── Opponents Area ────────────────────────────────────────────── */
+.opponents-area {
+  display: flex; gap: 8px; padding: 8px 16px; overflow-x: auto;
+}
+.opponents-area .dungeon-view { flex: 1; min-width: 280px; }
+
+/* ── Player Dungeon Area ───────────────────────────────────────── */
+.player-dungeon-area { padding: 0 16px; }
+
+/* ── Action Bar ────────────────────────────────────────────────── */
+.action-bar {
+  display: flex; gap: 8px; justify-content: center;
+  padding: 12px 16px;
+  background: var(--bg-medium);
+  border-top: 1px solid var(--border);
+  position: sticky; bottom: 0;
+}
+
+/* ── Game Board ────────────────────────────────────────────────── */
+.game-board {
+  display: flex; flex-direction: column; min-height: 100vh;
+}
+.game-board > .hand-view,
+.game-board > .town-view,
+.game-board > .adventure-log { margin: 6px 16px; }
+
+/* ── Setup Screen ──────────────────────────────────────────────── */
+.setup-screen {
+  max-width: 900px; margin: 0 auto; padding: 32px 24px;
+}
+.setup-header { text-align: center; margin-bottom: 32px; }
+.setup-header h1 { font-size: 36px; color: var(--accent-gold); margin-bottom: 8px; letter-spacing: 1px; }
+.setup-subtitle { color: var(--text-secondary); font-size: 16px; }
+.setup-options { margin-bottom: 24px; }
+.setup-option { margin-bottom: 16px; }
+.setup-option label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-secondary); }
+.player-count-buttons { display: flex; gap: 8px; }
+.setup-boss-select { margin-bottom: 24px; }
+.setup-boss-select h2 { font-size: 20px; margin-bottom: 12px; }
+.boss-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 12px;
+}
+.boss-grid .card { max-width: none; width: 100%; }
+.setup-actions { text-align: center; padding: 16px 0; }
+
+/* ── Game Over Screen ──────────────────────────────────────────── */
+.gameover-screen {
+  max-width: 700px; margin: 0 auto; padding: 48px 24px; text-align: center;
+}
+.gameover-header h1 { font-size: 32px; color: var(--accent-gold); margin-bottom: 16px; }
+.winner-announcement { margin: 24px 0; }
+.winner-crown { font-size: 48px; margin-bottom: 8px; }
+.winner-announcement h2 { font-size: 28px; color: var(--accent-gold); }
+.winner-boss { color: var(--text-secondary); font-size: 16px; margin-top: 4px; }
+.win-reason { color: var(--text-secondary); margin-top: 8px; }
+
+.scoreboard { margin: 32px 0; }
+.scoreboard h3 { font-size: 20px; margin-bottom: 12px; }
+.score-table { width: 100%; border-collapse: collapse; text-align: left; }
+.score-table th { padding: 8px 12px; border-bottom: 2px solid var(--border); color: var(--text-secondary); font-size: 13px; }
+.score-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+.winner-row { background: rgba(245, 197, 66, 0.1); }
+.winner-row td { color: var(--accent-gold); font-weight: 600; }
+.score-table .score-souls { color: var(--accent-gold); }
+.score-table .score-wounds { color: var(--accent-red); }
+.score-table .score-net { font-weight: 700; }
+
+.game-stats { color: var(--text-muted); font-size: 13px; margin: 16px 0; }
+.game-stats p { margin: 4px 0; }
+.gameover-actions { margin-top: 32px; }
+
+/* ── Scrollbar ─────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-dark); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-highlight); }
+
+/* ── Responsive ────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .boss-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .card { min-width: 120px; }
+  .dungeon-room { min-width: 80px; }
+  .phase-bar { flex-wrap: wrap; gap: 4px; }
+  .opponents-area { flex-direction: column; }
+  .hand-sections { flex-direction: column; }
 }

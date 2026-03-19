@@ -1,5 +1,5 @@
 import type {
-  GameState, PlayerState, CardEffect, RoomAbility, DungeonRoom, HeroInstance,
+  GameState, PlayerState, RoomAbility, DungeonRoom,
 } from '../data/types';
 import { addToLog } from './game-state';
 import { drawCards } from '../utils/shuffle';

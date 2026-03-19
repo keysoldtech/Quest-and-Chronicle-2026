@@ -1,6 +1,6 @@
 import type {
-  BossCard, RoomCard, HeroCard, SpellCard, MinibossCard, ItemCard,
-  AnyCard, TreasureType, HeroTier, Expansion,
+  BossCard, RoomCard, HeroCard, SpellCard, ItemCard,
+  AnyCard, TreasureType, Expansion,
 } from './types';
 import { BOSSES } from './cards/bosses';
 import { MONSTER_ROOMS } from './cards/rooms-monster';
