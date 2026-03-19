@@ -100,6 +100,7 @@ body {
 .card-flavor { font-size: 10px; color: var(--text-muted); font-style: italic; margin-top: 4px; }
 .card-type-badge { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
 .card-phase-icon { font-size: 14px; }
+.card-phase-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
 
 .card-room-monster { border-left: 3px solid var(--accent-red); }
 .card-room-trap { border-left: 3px solid var(--accent-blue); }
