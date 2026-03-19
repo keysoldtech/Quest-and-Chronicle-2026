@@ -28,6 +28,7 @@ export function createInitialState(config: GameConfig, bosses: BossCard[]): Game
   const ordinaryDeck = db.createOrdinaryHeroDeck();
   const epicDeck = db.createEpicHeroDeck();
   const itemDeck = config.modules.items ? db.createItemDeck() : [];
+  const minibossDeck = config.modules.minibosses ? db.createMinibossDeck() : [];
 
   // Deal starting hands: 5 rooms, 2 spells per player
   for (const p of players) {
@@ -54,7 +55,7 @@ export function createInitialState(config: GameConfig, bosses: BossCard[]): Game
       heroOrdinary: ordinaryDeck,
       heroEpic: epicDeck,
       item: itemDeck,
-      miniboss: [],
+      miniboss: minibossDeck,
     },
     discards: {
       room: [],
