@@ -8,8 +8,15 @@ export interface LureResult {
 
 /**
  * For each hero in town, determine which dungeon they are lured to.
- * Standard (2-4p): hero goes to dungeon with most matching treasure; ties = stays in town.
- * Variant (5-6p): ties split heroes by XP order.
+ *
+ * Tiebreaker order:
+ *   1. Most matching treasure
+ *   2. Fewest total rooms (smaller dungeon is "hungrier")
+ *   3. Highest Boss XP
+ * If still tied after all three, the hero stays in town.
+ *
+ * In the 5-6p variant (unlimited lives), ties always resolve
+ * (XP is the final breaker; first in turn order wins).
  */
 export function calculateLuring(state: GameState): LureResult[] {
   const results: LureResult[] = [];
@@ -21,6 +28,7 @@ export function calculateLuring(state: GameState): LureResult[] {
     const scores = state.players.map(p => ({
       playerId: p.id,
       count: getTreasureCount(p, treasure),
+      dungeonSize: p.dungeon.length,
       xp: p.boss.xp,
     }));
 
@@ -30,16 +38,28 @@ export function calculateLuring(state: GameState): LureResult[] {
       continue;
     }
 
-    const tied = scores.filter(s => s.count === maxCount);
+    let candidates = scores.filter(s => s.count === maxCount);
 
-    if (tied.length === 1) {
-      results.push({ heroIndex: hi, targetPlayerId: tied[0].playerId });
-    } else if (isVariant) {
-      // 5-6p variant: highest XP among tied players gets the hero
-      tied.sort((a, b) => b.xp - a.xp);
-      results.push({ heroIndex: hi, targetPlayerId: tied[0].playerId });
+    if (candidates.length === 1) {
+      results.push({ heroIndex: hi, targetPlayerId: candidates[0].playerId });
+      continue;
+    }
+
+    // Tiebreaker 2: fewest rooms
+    const minRooms = Math.min(...candidates.map(c => c.dungeonSize));
+    candidates = candidates.filter(c => c.dungeonSize === minRooms);
+
+    if (candidates.length === 1) {
+      results.push({ heroIndex: hi, targetPlayerId: candidates[0].playerId });
+      continue;
+    }
+
+    // Tiebreaker 3: highest XP
+    candidates.sort((a, b) => b.xp - a.xp);
+    if (candidates[0].xp !== candidates[1].xp || isVariant) {
+      results.push({ heroIndex: hi, targetPlayerId: candidates[0].playerId });
     } else {
-      // Standard: tie = hero stays in town
+      // True tie after all breakers in standard mode — stays in town
       results.push({ heroIndex: hi, targetPlayerId: null });
     }
   }

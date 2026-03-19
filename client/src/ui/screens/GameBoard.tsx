@@ -20,13 +20,7 @@ export function GameBoard() {
   const [selectedRoom, setSelectedRoom] = useState<RoomCard | null>(null);
   const [showBuildSlots, setShowBuildSlots] = useState(false);
 
-  if (!state || !humanPlayer) return null;
-
-  const aiPlayers = state.players.filter(p => p.id !== humanPlayer.id);
-  const isBuildPhase = state.currentPhase === 'build';
-  const isBaitPhase = state.currentPhase === 'bait';
-  const isEndPhase = state.currentPhase === 'end';
-
+  // All hooks MUST be above any early return
   const handleSelectRoom = useCallback((room: RoomCard) => {
     setSelectedRoom(prev => prev === room ? null : room);
     setShowBuildSlots(true);
@@ -51,6 +45,13 @@ export function GameBoard() {
     playSpell(spell);
   }, [playSpell]);
 
+  if (!state || !humanPlayer) return null;
+
+  const aiPlayers = state.players.filter(p => p.id !== humanPlayer.id);
+  const isBuildPhase = state.currentPhase === 'build';
+  const isBaitPhase = state.currentPhase === 'bait';
+  const isEndPhase = state.currentPhase === 'end';
+
   return (
     <div className="game-board">
       {/* Top: Phase info and round counter */}
@@ -58,7 +59,7 @@ export function GameBoard() {
         <div className="round-counter">Round {state.roundNumber + 1}</div>
         <div className="phase-label">{phaseLabel}</div>
         <div className="deck-info">
-          &#127183; {state.decks.room.length} rooms | &#10024; {state.decks.spell.length} spells
+          🃏 {state.decks.room.length} rooms | ✨ {state.decks.spell.length} spells
         </div>
       </div>
 
@@ -136,12 +137,12 @@ export function GameBoard() {
         )}
         {isBaitPhase && (
           <button className="btn btn-primary" onClick={advancePhase}>
-            Start Adventure &#9876;
+            Start Adventure ⚔
           </button>
         )}
         {isEndPhase && (
           <button className="btn btn-primary" onClick={advancePhase}>
-            Next Round &#10140;
+            Next Round →
           </button>
         )}
         {state.currentPhase === 'town' && (

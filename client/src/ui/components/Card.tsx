@@ -42,7 +42,7 @@ export function RoomCardView({ room, className = '', onClick, selected, disabled
       <div className="card-header">
         <span className="card-name">{room.name}</span>
         <span className="card-damage">
-          <span className="damage-icon">&#9829;</span> {room.damage}
+          <span className="damage-icon">💀</span> {room.damage}
         </span>
       </div>
       <div className="card-type-badge">
@@ -65,7 +65,7 @@ export function HeroCardView({ hero, className = '', currentHP }: { hero: HeroCa
       <div className="card-header">
         <span className="card-name">{hero.name}</span>
         <span className="card-hp">
-          <span className="hp-icon">&#10084;</span> {hp}/{hero.health}
+          <span className="hp-icon">❤</span> {hp}/{hero.health}
         </span>
       </div>
       <div className="card-class">
@@ -91,6 +91,7 @@ export function SpellCardView({ spell, className = '', onClick, disabled }: Card
         <span className="card-name">{spell.name}</span>
         <span className="card-phase-icon">{phaseIcon(spell.phase)}</span>
       </div>
+      <div className="card-phase-label">{spell.phase}</div>
       <div className="card-ability">{spell.description}</div>
       <div className="card-flavor">{spell.flavorText}</div>
     </div>
@@ -105,16 +106,16 @@ export function DungeonRoomView({ room, index }: { room: DungeonRoom; index: num
       <div className="room-position">#{index + 1}</div>
       <div className="room-name">{room.card.name}</div>
       <div className="room-stats">
-        <span className="damage-icon">&#9829;</span> {totalDamage}
+        <span className="damage-icon">💀</span> {totalDamage}
         <TreasureIcon type={treasure} />
       </div>
       {room.card.ability && (
         <div className="room-ability-hint" title={room.card.ability.description}>
-          &#9889;
+          ⚡
         </div>
       )}
       {room.attachedMiniboss && (
-        <div className="room-miniboss">&#9876; MB</div>
+        <div className="room-miniboss">⚔ MB</div>
       )}
     </div>
   );
@@ -122,11 +123,11 @@ export function DungeonRoomView({ room, index }: { room: DungeonRoom; index: num
 
 export function TreasureIcon({ type }: { type: string }) {
   const icons: Record<string, string> = {
-    fighter: '&#9876;',
-    mage: '&#9733;',
-    thief: '&#9830;',
-    cleric: '&#10010;',
-    explorer: '&#9788;',
+    fighter: '⚔',
+    mage: '★',
+    thief: '◆',
+    cleric: '✚',
+    explorer: '☀',
   };
   const colors: Record<string, string> = {
     fighter: '#e74c3c',
@@ -139,20 +140,21 @@ export function TreasureIcon({ type }: { type: string }) {
     <span
       className="treasure-icon"
       style={{ color: colors[type] || '#888' }}
-      dangerouslySetInnerHTML={{ __html: icons[type] || '?' }}
       title={type}
-    />
+    >
+      {icons[type] || '?'}
+    </span>
   );
 }
 
 function phaseIcon(phase: string): string {
   switch (phase) {
-    case 'build': return '&#128296;';
-    case 'adventure': return '&#9876;';
-    case 'bait': return '&#127775;';
-    case 'any': return '&#9733;';
-    case 'end': return '&#9200;';
-    default: return '&#9733;';
+    case 'build': return '🔨';
+    case 'adventure': return '⚔';
+    case 'bait': return '🌟';
+    case 'any': return '★';
+    case 'end': return '⏰';
+    default: return '★';
   }
 }
 

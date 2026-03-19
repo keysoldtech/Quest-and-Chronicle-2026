@@ -85,23 +85,22 @@ export function validateBuild(state: GameState, action: BuildAction): string | n
   const handIdx = player.hand.indexOf(card);
   if (handIdx < 0) return 'Card not in hand';
 
+  // Check dungeon-full first for any room type trying to add a new slot
+  if (action.position === 'new' && isDungeonFull(player)) {
+    return 'Dungeon is full (5 rooms max)';
+  }
+
   if (card.isAdvanced) {
     if (action.position === 'new') return 'Advanced rooms must be built on top of an existing room';
     const existingRoom = player.dungeon[action.position];
     if (!existingRoom) return 'No room at that position';
 
-    // Check treasure match
     const required = card.requiredTreasure ?? [];
     if (required.length > 0) {
       const existingTreasure = Array.isArray(existingRoom.card.treasure)
         ? existingRoom.card.treasure : [existingRoom.card.treasure];
       const hasMatch = required.some(t => existingTreasure.includes(t));
       if (!hasMatch) return 'Advanced room requires matching treasure on the room below';
-    }
-  } else {
-    // Ordinary room: can build in a new slot or on top of any room
-    if (action.position === 'new' && isDungeonFull(player)) {
-      return 'Dungeon is full (5 rooms max)';
     }
   }
 

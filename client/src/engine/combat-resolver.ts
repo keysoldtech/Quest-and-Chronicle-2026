@@ -2,6 +2,7 @@ import type {
   GameState, PlayerState, HeroInstance,
 } from '../data/types';
 import { addToLog } from './game-state';
+import { getBossPassiveDamageBonus } from './effect-resolver';
 
 export interface CombatEvent {
   type: 'enter_room' | 'take_damage' | 'room_ability' | 'hero_died' | 'hero_survived' | 'spell_window';
@@ -55,6 +56,9 @@ export function resolveHeroCombat(
 
     // Calculate room damage
     let roomDamage = room.card.damage + room.damageCounters;
+
+    // Boss passive damage bonus (e.g. Fenrir: +1 to monster rooms)
+    roomDamage += getBossPassiveDamageBonus(player, room);
 
     // Miniboss bonus damage
     if (room.attachedMiniboss) {
