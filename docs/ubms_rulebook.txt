@@ -1,0 +1,310 @@
+UNIFIED BOSS MONSTER SYSTEM (UBMS)
+UNIFIED BOSS MONSTER SYSTEM (UBMS) MASTER RULEBOOK – TEXT EDITION
+Version 1.0 Includes every expansion and standalone Boss Monster product.
+============================================
+SECTION 0 — COVER PAGE (TEXT VERSION)
+============================================
+A complete unified ruleset combining:
+Boss Monster (Classic / 10th Anniversary)
+Boss Monster: The Next Level
+Rise of the Minibosses
+Super Boss Monster
+Tools of Hero-Kind
+Implements of Destruction
+Crash Landing
+Vault of Villains
+Visual Reference: Core Icons
+Soul: Gold crystal icon (on Hero card back)
+Wound: Red blood drop icon (on Hero card front)
+Damage: Empty heart icon with a number
+Health: Red heart icon with a number
+Coin: Gold circle icon
+Minion: Player-colored pawn icon
+
+
+============================================
+SECTION 1 — INTRODUCTION
+============================================
+1.1 What is UBMS?
+The Unified Boss Monster System (UBMS) is a comprehensive rule framework that merges all Boss Monster content—base games, expansions, standalone sets, and module packs—into a single, clean, modern ruleset.
+This rulebook is designed to be:
+Complete
+Consistent
+Modular
+Board-Compatible
+Expansion-Compatible
+Balanced
+Future-Proof
+All mechanics across all sets have been rewritten for clarity.
+1.2 Why UBMS?
+Players often combine multiple Boss Monster games, but the official rules were never built for cross-expansion compatibility.
+UBMS solves this by providing:
+Unified terminology
+Universal sequencing
+Standardized modules
+Consistent timing windows
+Consolidated combat rules
+Merged treasure and hero types
+Optional board support
+Optional minions
+Optional coins
+Optional dice enforcement
+UBMS is now the definitive way to play.
+1.3 Game Objective
+You win if you:
+Collect 10 Souls (but Epic Souls count as 2).
+The winner is the player with the most Souls minus Wounds.
+You lose if you (Standard 2-4 Player Mode):
+Collect 5 Wounds.
+(See Section 10 for 5-6 Player Variant Victory Conditions)
+1.4 Recommended Familiarity Levels
+Use this guide if:
+You own multiple Boss Monster games
+You want a “Big Box” unified experience
+You want to use the board from Super Boss Monster
+You want a modernized ruleset
+You want adjustable modules
+============================================
+SECTION 2 — COMPONENTS
+============================================
+Below are the combined components across all Boss Monster content.
+2.1 Bosses
+Your character, determines XP (turn order) and Level-Up abilities. The Level Up ability triggers only once per game, when your dungeon first reaches its maximum length of five visible Rooms (not counting the Boss).
+Card Anatomy: The Boss card features a Boss Icon (A), a Level Up Ability (B) that triggers once, an XP Value (C) for turn order/tie-breaker, and a Treasure Icon (D) which adds to the lure of your dungeon.
+2.2 Rooms
+Rooms come in two categories:
+Monster Rooms — deal damage
+Trap Rooms — utility and control
+Rooms may include:
+Treasure icons
+Immediate “When Built” effects
+Permanent abilities
+Coin abilities
+Minion synergy
+Dice abilities
+Item slots
+Advanced Rooms (gold border) can only be built on top of an existing Room with at least one matching Treasure icon. Ordinary Rooms (silver border) can be built on top of any Room, regardless of treasure type.
+2.3 Spells
+Instant effects played during:
+Build Phase
+Adventure Phase
+Some spells: Town Phase / Minion Phase / Market Phase
+Card Anatomy: Spells feature text describing their effects and a Phase Icon (Hammer for Build, Axe for Adventure, Both for Either).
+2.4 Items (Tools of Hero-Kind, Implements of Destruction)
+Items may be:
+Hero Items (carried by Heroes)
+Room Items (Tools) (equipped by Rooms)
+Boss Items (Implements) (equipped by Bosses)
+Item Card Rules: (When Item Module is active) Items are claimed by a Boss when a Hero carrying it is defeated. The claimed Item can then be used once like a Spell during the Build or Adventure phase to trigger its Boss Ability. You may only have one face-up Item at a time in your scorekeeping area.
+2.5 Minions (Super Boss Monster)
+Pre-hero units acting on the board, represented by player-colored pawns.
+2.6 Minibosses (Rise of the Minibosses)
+Attached to Rooms; give:
+Persistent effects (Level One and Two)
+Coin abilities (Promotion)
+Damage boosts
+Promotion: Minibosses can be Promoted by spending Coins to reveal Level Two and Level Three abilities.
+2.7 Coins
+Currency used for:
+Room coin abilities
+Upgrading minibosses
+Market purchases
+Treasure manipulation
+Rerolls (dice module)
+2.8 Hero Types
+Heroes appear in two tiers:
+Ordinary Heroes (Silver border, 1 Soul, 1 Wound)
+Epic Heroes (Gold border, 2 Souls, 2 Wounds)
+Special hero variants:
+Hybrid Heroes (dual treasure)
+Dark Heroes (punish strongest boss)
+Explorer (Alien) Heroes (Crash Landing)
+2.9 Treasure Icons
+2.10 Damage Indicators
+Hearts represent HP and combat damage. Damage counters (tokens) are used for temporary or permanent damage modification.
+2.11 Super Boss Monster Board (Optional)
+Full Board View: (Used in Super Boss Monster mode) The board contains the Town area (top row) and the Landmark area (bottom row).
+Contains:
+Landmarks (Temple, Stadium, Library, Hideout, Tavern)
+Minion paths
+Hero overflow areas
+Market
+Town center
+
+============================================
+SECTION 3 — SETUP
+============================================
+3.1 Choose Bosses
+Random or draft.
+3.2 Starting Hands
+5 Rooms
+2 Spells (Optional modes allow item drafts.)
+3.3 Setup Decks
+Pick your Hero Mode:
+Hero Mode H1 (Recommended): First 7 rounds = Ordinary heroes. All later rounds = Epic heroes.
+Hero Mode H2 (Classic): Ordinary deck runs out → Epic deck starts.
+Hero Mode H3 (Random Mix): Shuffle Ordinary + Epics together.
+3.4 Setup Board (Optional)
+If playing with the Super Boss Monster board:
+Place Landmarks
+Place Minions
+Prepare Market
+Shuffle Item deck
+Prepare Minion cards
+3.5 Coins
+Recommended starting coins:
+Classic Mode — 0
+Hybrid Mode — 1
+Super Mode — 2
+3.6 Player Turn Order
+Determined by highest XP Boss (Highest XP goes first).
+3.7 Starting Room
+Each player builds one Room face-down. Reveal simultaneously.
+
+============================================
+SECTION 4 — TURN STRUCTURE
+============================================
+Each round follows this sequence:
+Town Phase
+Market Draft (optional)
+Build Phase
+Minion Phase (optional)
+Bait Phase
+Adventure Phase
+End Phase
+4.1 Town Phase
+Reveal Heroes (draw cards based on Hero Mode).
+Place Heroes in Town or Landmarks. (Heroes pushed out of Town move to an available Landmark matching their treasure. If that Landmark is occupied, they move to the Tavern, where they can stack.)
+Apply Landmark passives.
+Item Attaching: If the Items Module is active, reveal Item cards (1 in 2-3 players, 2 in 4+ players) and place them in Town. An Item attaches to the first Hero matching its Treasure type (or the first Hero for Universal Items). Items cannot attach to Heroes with a star icon.
+4.2 Market Draft (Optional)
+Players may select cards from:
+Market Rooms
+Spells
+Items
+Minion cards
+Priority is determined by: Boss XP, then Coins, then Spells or Room abilities.
+4.3 Build Phase
+Players:
+Choose 1 Room.
+Build face-down.
+Pay Coins for coin abilities.
+Reveal Rooms.
+Resolve “When Built” abilities.
+Attach Items.
+Attach Minibosses.
+4.4 Minion Phase (Optional)
+Minions activate (in turn order):
+Move
+Summon heroes
+Shift treasure
+Generate coins
+Apply Landmark actions
+Cleanup: After every player has gained their Minion's effects, if any cards remain in the Market, move them all to the discard pile.
+4.5 Bait Phase
+Heroes choose which dungeon they enter based on treasure priorities.
+2-4 Player Tie-breakers (Standard): Highest matching treasure. If no player has treasure of that Hero's type, or if all players are tied, the Hero stays in Town until the next turn.
+5-6 Player Tie-breakers (Variant): Ties split the Heroes! If two or more players are tied for a treasure type, check the number of relevant Heroes in Town. If there are at least as many Heroes of that type as there are tied players, lure one Hero to each dungeon, distributed by highest XP Boss first. Any remainder stays in Town. (See Section 10 for full 5-6 player rules.)
+4.6 Adventure Phase
+Heroes traverse dungeons (in Room order):
+Room damage applies.
+Item Claiming: If a Hero with an Item is defeated, the Boss claims the Item.
+Spells may interrupt.
+Miniboss effects apply.
+Minions may still interact (variant rule).
+If a Hero dies, the Boss gains a Soul. If a Hero survives, the Boss takes a Wound.
+4.7 End Phase
+Cleanup (discard spells, etc.).
+Resolve “End of Round” effects.
+Check win/loss conditions.
+4.8 Effect Resolution
+Priority Rule: Spells and Room abilities resolve in the reverse order in which they were played ("last in, first out"). This allows for interruptions, where a newer effect resolves before an older one.
+
+============================================
+SECTION 5 — OPTIONAL MODULES
+============================================
+Each module can be toggled independently.
+5.1 Coin Module
+Function: Adds currency for advanced actions.
+5.2 Miniboss Module
+Function: Adds Miniboss cards attached to Rooms for damage boosts and treasure replacement.
+5.3 Minion Module
+Function: Adds Minions which reshape the map before Heroes move.
+5.4 Hybrid Hero Module
+Function: Adds Heroes with two treasure types; they count as both.
+5.5 Dark Hero Module
+Function: Adds Dark Heroes who punish the strongest Boss and seek Wounds more than Souls.
+5.6 Explorer Module (Crash Landing)
+Function: Adds the Explorer treasure type, alien Heroes, and unique Rooms.
+5.7 Items Module
+Function: Adds Items that Heroes may carry, Rooms may equip (Tools), or Bosses may equip (Implements). Items claimed by a Boss can be used once as a Spell (see Item Card Rules in Section 2.4).
+5.8 Dice Module
+Function: Adds Dice-triggered Room and Item abilities.
+
+============================================
+SECTION 6 — HERO MODES
+============================================
+
+============================================
+SECTION 7 — GLOSSARY
+============================================
+
+============================================
+SECTION 9 — OLD CARD COMPATIBILITY
+============================================
+9.1 Interpreting Legacy Cards
+Many older cards, created before mechanics like Minibosses (Rise of the Minibosses) or Coins (Super Boss Monster) were introduced, use terms that must be re-interpreted for the UBMS environment.
+9.2 Damage Bonuses and Counters
+Some older cards grant a permanent damage bonus (e.g., "+1 Damage") or increase the base damage of a Room. In UBMS, permanent damage increases are standardized using Counters.
+If the card text specifically says "permanent" or "for the rest of the game": Treat this as gaining a Counter and place a token on the Room.
+If the card text provides a bonus damage amount until the end of the turn: This is a temporary effect, not a Counter.
+
+============================================
+SECTION 10 — 5-6 PLAYER VARIANT RULES (UNLIMITED LIVES)
+============================================
+These rules are active when playing with 5 or 6 players, or when the Unlimited Lives Play Variant is selected.
+10.1 Changes to Victory Conditions
+Players are no longer eliminated upon reaching 5 or more Wounds.
+The game ends at the end of a turn in which one or more players acquire at least 10 Souls, OR when both the Ordinary Hero and Epic Hero decks have been depleted.
+The winner is the player with the highest total Souls minus Wounds. In the event of a tie, the Boss with the lowest XP wins the game.
+10.2 Changes to the Bait Phase (Ties Split Heroes)
+Unlike the standard 2-4 player game, ties split the Heroes rather than causing them to stay in Town.
+Check for Tie: If two or more players are tied for a Treasure type (with the highest value), check the number of relevant Heroes in Town.
+Split the Heroes: If there are at least as many Heroes of that type as there are players tied, lure one Hero to each tied dungeon.
+Distribution: The Hero of that type that has been in Town longest (the "oldest" Hero) goes to the tied player with the highest XP Boss. The next oldest Hero goes to the next highest XP Boss, and so on.
+Remainder: Repeat this process until the number of Heroes in Town cannot be evenly split among tied players. Any remaining Heroes stay in Town.
+10.3 Item Card Claiming and Usage
+Claiming: If a Hero with an Item is defeated, the Boss claims the Item. The claimed Item can then be used once like a Spell during the Build or Adventure phase to trigger its Boss Ability.
+Limitation: A Boss can only have one face-up Item in their scorekeeping area at a time. If you defeat a Hero with a new Item while you already have a face-up Item, you must immediately choose one of the following:
+Use the current face-up Item's ability (flipping it face-down).
+Flip the current face-up Item face-down.
+Discard the new Item you just claimed.
+(An Item may be used from the scorekeeping area by flipping it face-down, even if the Item was already face-down.)
+
+
+Logic Building
+Use these when working in the game logic to ensure all things work as they would irl
+Logic Expansion/Rework
+This is the complete, integrated list of digital game logic, structured around the four essential mechanics and steps you provided, incorporating all the rules and phase details we have discussed from the core and expansion rulebooks.
+
+UBMS DIGITAL CARD LOGIC SPECIFICATION (ALL SETS)
+UBMS DIGITAL CARD LOGIC SPECIFICATION (ALL SETS)
+This document specifies the core game logic for all 187 unique cards found in the provided data files (bosses.js, rooms-monster.js, rooms-trap.js, spells.js, items.js, minibosses.js). This serves as the definitive blueprint for digital implementation.
+1. Boss Level-Up Abilities
+Boss abilities trigger once the dungeon has reached 5 Rooms in length.
+
+
+2. Room Abilities (Monster)
+Rooms activate when a Hero enters them, or upon being Built/Destroyed.
+
+3. Room Abilities (Trap)
+
+4. Spell Abilities
+Spells are instant effects that can be played during open windows.
+
+5. Item Abilities (Hero & Boss Implements)
+Items apply abilities while attached to a Hero, or when used/claimed by a Boss.
+
+6. Miniboss Abilities
+Minibosses attach to Rooms. They have 3 Levels: Level 1 (Passive), Level 2 (Enhanced Passive), and Level 3 (Active Reset).
+
