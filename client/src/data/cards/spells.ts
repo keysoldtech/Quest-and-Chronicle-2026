@@ -1,12 +1,11 @@
 import type { SpellCard } from '../types';
-import { SpellPhase } from '../types';
 
 export const SPELLS: SpellCard[] = [
   {
     id: 'spell_boulder',
     name: 'Giant Boulder',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'damageHero',
         value: 5,
@@ -22,7 +21,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_cave_in',
     name: 'Cave-In',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'damageHero',
         value: 3,
@@ -37,7 +36,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_annihilate',
     name: 'Annihilate',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'killHero',
         target: 'heroHealth4OrLess'
@@ -51,7 +50,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_teleport',
     name: 'Teleportation',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'moveHero',
         target: 'heroInDungeon',
@@ -66,7 +65,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_freeze',
     name: 'Freeze',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'freezeHero',
         target: 'heroInDungeon'
@@ -80,7 +79,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_charm',
     name: 'Charm',
     spellType: 'instant',
-    phase: SpellPhase.Bait,
+    phase: 'bait',
     effect: {
         type: 'lureHero',
         value: 1,
@@ -95,7 +94,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_counterspell',
     name: 'Counterspell',
     spellType: 'instant',
-    phase: SpellPhase.Any,
+    phase: 'any',
     effect: {
         type: 'cancelSpell'
       },
@@ -108,7 +107,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_exhaustion',
     name: 'Exhaustion',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'damageHero',
         value: 2,
@@ -123,7 +122,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_fear',
     name: 'Fear',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'sendBack',
         target: 'heroInDungeon',
@@ -138,7 +137,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_jeopardy',
     name: 'Jeopardy',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'sendBack',
         target: 'heroInDungeon',
@@ -153,7 +152,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_knockout_gas',
     name: 'Knockout Gas',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'damageHero',
         value: 1,
@@ -168,7 +167,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_motivation',
     name: 'Motivation',
     spellType: 'instant',
-    phase: SpellPhase.Build,
+    phase: 'build',
     effect: {
         type: 'buildExtraRoom'
       },
@@ -181,7 +180,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_princess_captive',
     name: 'Princess in Peril',
     spellType: 'instant',
-    phase: SpellPhase.Bait,
+    phase: 'bait',
     effect: {
         type: 'lureAllType',
         heroClass: 'fighter'
@@ -195,7 +194,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_soul_drain',
     name: 'Soul Drain',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'healWound',
         value: 1,
@@ -210,7 +209,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_zombify',
     name: 'Zombify',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'convertHero',
         target: 'deadHero',
@@ -225,7 +224,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_dark_pact',
     name: 'Dark Pact',
     spellType: 'instant',
-    phase: SpellPhase.Any,
+    phase: 'any',
     effect: {
         type: 'drawSpell',
         value: 2,
@@ -243,7 +242,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_fortune',
     name: 'Fortune',
     spellType: 'instant',
-    phase: SpellPhase.Any,
+    phase: 'any',
     effect: {
         type: 'drawRoom',
         value: 2
@@ -257,7 +256,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_ransack',
     name: 'Ransack',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'gainCoins',
         value: 2,
@@ -272,7 +271,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_resurrection',
     name: 'Resurrection',
     spellType: 'instant',
-    phase: SpellPhase.Any,
+    phase: 'any',
     effect: {
         type: 'retrieveFromDiscard',
         cardType: 'room',
@@ -287,7 +286,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_sabotage',
     name: 'Sabotage',
     spellType: 'instant',
-    phase: SpellPhase.Build,
+    phase: 'build',
     effect: {
         type: 'preventBuild',
         target: 'opponent'
@@ -301,7 +300,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_vampire_touch',
     name: 'Vampiric Touch',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'damageAndHeal',
         damage: 2,
@@ -316,7 +315,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_wind_change',
     name: 'Winds of Change',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'moveHero',
         target: 'heroInDungeon',
@@ -331,7 +330,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_trap_upgrade',
     name: 'Trap Upgrade',
     spellType: 'instant',
-    phase: SpellPhase.Build,
+    phase: 'build',
     effect: {
         type: 'addDamageCounter',
         target: 'trapRoom',
@@ -346,7 +345,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_monster_upgrade',
     name: 'Monster Upgrade',
     spellType: 'instant',
-    phase: SpellPhase.Build,
+    phase: 'build',
     effect: {
         type: 'addDamageCounter',
         target: 'monsterRoom',
@@ -361,7 +360,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_backstab',
     name: 'Backstab',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'damageHero',
         value: 4,
@@ -376,7 +375,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_betrayal',
     name: 'Betrayal',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'stealHero',
         target: 'heroInOpponentDungeon'
@@ -390,7 +389,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_black_hole',
     name: 'Black Hole',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'killHero',
         target: 'heroInRoom',
@@ -405,7 +404,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_blood_magic',
     name: 'Blood Magic',
     spellType: 'instant',
-    phase: SpellPhase.Any,
+    phase: 'any',
     effect: {
         type: 'drawRoom',
         value: 3,
@@ -423,7 +422,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_clone',
     name: 'Clone Room',
     spellType: 'instant',
-    phase: SpellPhase.Build,
+    phase: 'build',
     effect: {
         type: 'copyRoom',
         target: 'anyRoom'
@@ -437,7 +436,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_curse_of_weakness',
     name: 'Curse of Weakness',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'reduceHP',
         target: 'heroInTown',
@@ -452,7 +451,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_death_touch',
     name: 'Death Touch',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'killHero',
         target: 'heroHealth3OrLess'
@@ -466,7 +465,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_decoy',
     name: 'Decoy',
     spellType: 'instant',
-    phase: SpellPhase.Bait,
+    phase: 'bait',
     effect: {
         type: 'redirectHero',
         target: 'heroGoingToOpponent'
@@ -480,7 +479,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_demolish',
     name: 'Demolish',
     spellType: 'instant',
-    phase: SpellPhase.Build,
+    phase: 'build',
     effect: {
         type: 'destroyRoom',
         target: 'anyRoom'
@@ -494,7 +493,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_double_agent',
     name: 'Double Agent',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'controlHero',
         description: 'Control a Hero; it damages other Heroes.'
@@ -508,7 +507,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_earthquake',
     name: 'Earthquake',
     spellType: 'instant',
-    phase: SpellPhase.Build,
+    phase: 'build',
     effect: {
         type: 'deactivateRooms',
         target: 'all',
@@ -523,7 +522,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_empower',
     name: 'Empower',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'bonusDamage',
         target: 'ownRoom',
@@ -538,7 +537,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_extraction',
     name: 'Extraction',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'healWound',
         value: 1,
@@ -556,7 +555,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_fireball',
     name: 'Fireball!',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'randomDamage',
         min: 1,
@@ -573,7 +572,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_gold_rush',
     name: 'Gold Rush',
     spellType: 'instant',
-    phase: SpellPhase.Any,
+    phase: 'any',
     effect: {
         type: 'gainCoins',
         value: 4
@@ -587,7 +586,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_identity_crisis',
     name: 'Identity Crisis',
     spellType: 'instant',
-    phase: SpellPhase.Bait,
+    phase: 'bait',
     effect: {
         type: 'changeHeroClass',
         target: 'heroInTown'
@@ -601,7 +600,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_lure',
     name: 'Irresistible Lure',
     spellType: 'instant',
-    phase: SpellPhase.Bait,
+    phase: 'bait',
     effect: {
         type: 'lureHero',
         value: 2
@@ -615,7 +614,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_mutation',
     name: 'Mutation',
     spellType: 'instant',
-    phase: SpellPhase.Build,
+    phase: 'build',
     effect: {
         type: 'changeRoomType',
         target: 'ownRoom'
@@ -629,7 +628,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_necromancy',
     name: 'Necromancy',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'reviveHero',
         target: 'deadHero',
@@ -644,7 +643,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_paralysis',
     name: 'Paralysis',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'skipRoom',
         target: 'heroInDungeon',
@@ -659,7 +658,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_raise_dead',
     name: 'Raise Dead',
     spellType: 'instant',
-    phase: SpellPhase.Build,
+    phase: 'build',
     effect: {
         type: 'retrieveFromDiscard',
         cardType: 'room',
@@ -674,7 +673,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_remodel',
     name: 'Remodel',
     spellType: 'instant',
-    phase: SpellPhase.Build,
+    phase: 'build',
     effect: {
         type: 'swapRooms',
         target: 'ownRooms'
@@ -688,7 +687,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_sacrifice',
     name: 'Sacrifice',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'killHero',
         target: 'heroInDungeon',
@@ -706,7 +705,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_steal_treasure',
     name: 'Steal Treasure',
     spellType: 'instant',
-    phase: SpellPhase.Any,
+    phase: 'any',
     effect: {
         type: 'stealCoins',
         target: 'opponent',
@@ -721,7 +720,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_ambush',
     name: 'Ambush',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'damageHero',
         value: 3,
@@ -736,7 +735,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_apocalypse',
     name: 'Apocalypse',
     spellType: 'instant',
-    phase: SpellPhase.Build,
+    phase: 'build',
     effect: {
         type: 'destroyAllRooms',
         target: 'allPlayers'
@@ -750,7 +749,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_boss_rage',
     name: 'Boss Rage',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'bonusDamage',
         target: 'allRooms',
@@ -765,7 +764,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_dark_bargain',
     name: 'Dark Bargain',
     spellType: 'instant',
-    phase: SpellPhase.Any,
+    phase: 'any',
     effect: {
         type: 'searchDeck',
         target: 'roomDeck',
@@ -784,7 +783,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_deadly_gas',
     name: 'Deadly Gas',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'damageHero',
         value: 2,
@@ -799,7 +798,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_dominate',
     name: 'Dominate',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'controlHero',
         target: 'heroInDungeon',
@@ -814,7 +813,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_doppelganger',
     name: 'Doppelganger',
     spellType: 'instant',
-    phase: SpellPhase.Build,
+    phase: 'build',
     effect: {
         type: 'copyRoom',
         target: 'ownRoom',
@@ -829,7 +828,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_execute',
     name: 'Execute',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'killHero',
         target: 'heroHealth5OrLess'
@@ -843,7 +842,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_explosion',
     name: 'Explosion',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'damageHero',
         value: 6,
@@ -859,7 +858,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_fade',
     name: 'Fade Away',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'immuneToHero',
         target: 'ownDungeon'
@@ -873,7 +872,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_flash_freeze',
     name: 'Flash Freeze',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'freezeAllHeroes',
         target: 'heroesInDungeon'
@@ -887,7 +886,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_giant_growth',
     name: 'Giant Growth',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'bonusDamage',
         target: 'monsterRoom',
@@ -902,7 +901,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_grave_robber',
     name: 'Grave Robber',
     spellType: 'instant',
-    phase: SpellPhase.Any,
+    phase: 'any',
     effect: {
         type: 'retrieveFromDiscard',
         cardType: 'any',
@@ -917,7 +916,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_greed',
     name: 'Greed',
     spellType: 'instant',
-    phase: SpellPhase.Any,
+    phase: 'any',
     effect: {
         type: 'stealCoins',
         target: 'allOpponents',
@@ -932,7 +931,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_mass_heal',
     name: 'Mass Heal',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'healWound',
         value: 2
@@ -946,7 +945,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_mind_control',
     name: 'Mind Control',
     spellType: 'instant',
-    phase: SpellPhase.Bait,
+    phase: 'bait',
     effect: {
         type: 'stealHero',
         target: 'heroGoingToOpponent'
@@ -960,7 +959,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_abduction',
     name: 'Alien Abduction',
     spellType: 'instant',
-    phase: SpellPhase.Bait,
+    phase: 'bait',
     effect: {
         type: 'lureHero',
         value: 1,
@@ -975,7 +974,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_beam_up',
     name: 'Beam Up',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'removeHero',
         target: 'heroInDungeon'
@@ -989,7 +988,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_emp',
     name: 'EMP Blast',
     spellType: 'instant',
-    phase: SpellPhase.Build,
+    phase: 'build',
     effect: {
         type: 'deactivateRooms',
         target: 'opponentDungeon',
@@ -1004,7 +1003,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_hyperdrive',
     name: 'Hyperdrive',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'skipAllRooms',
         target: 'heroInDungeon'
@@ -1018,7 +1017,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_laser_beam',
     name: 'Laser Beam',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'damageHero',
         value: 5,
@@ -1033,7 +1032,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_orbital_strike',
     name: 'Orbital Strike',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'damageHero',
         value: 3,
@@ -1048,7 +1047,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_phase_shift',
     name: 'Phase Shift',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'phaseRoom',
         target: 'ownRoom'
@@ -1062,7 +1061,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_stasis',
     name: 'Stasis Field',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'freezeHero',
         target: 'heroInDungeon',
@@ -1077,7 +1076,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_tech_upgrade',
     name: 'Tech Upgrade',
     spellType: 'instant',
-    phase: SpellPhase.Build,
+    phase: 'build',
     effect: {
         type: 'addDamageCounter',
         target: 'explorerRoom',
@@ -1092,7 +1091,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_tractor_beam',
     name: 'Tractor Beam',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'pullHero',
         target: 'heroInOpponentDungeon'
@@ -1106,7 +1105,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_promote',
     name: 'Battlefield Promotion',
     spellType: 'instant',
-    phase: SpellPhase.Any,
+    phase: 'any',
     effect: {
         type: 'promoteMiniboss',
         cost: 0
@@ -1120,7 +1119,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_miniboss_rally',
     name: 'Miniboss Rally',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'bonusDamage',
         target: 'roomsWithMiniboss',
@@ -1135,7 +1134,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_recruit',
     name: 'Recruitment Drive',
     spellType: 'instant',
-    phase: SpellPhase.Any,
+    phase: 'any',
     effect: {
         type: 'drawMiniboss',
         value: 2
@@ -1149,7 +1148,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_miniboss_sacrifice',
     name: 'Miniboss Sacrifice',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'damageHero',
         value: 5,
@@ -1167,7 +1166,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_curse',
     name: 'Ancient Curse',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'curse',
         target: 'heroInTown',
@@ -1183,7 +1182,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_petrify',
     name: 'Petrify',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'killHero',
         target: 'heroHealth6OrLess'
@@ -1197,7 +1196,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_plague',
     name: 'Plague',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'damageHero',
         value: 1,
@@ -1213,7 +1212,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_summon_demon',
     name: 'Summon Demon',
     spellType: 'instant',
-    phase: SpellPhase.Build,
+    phase: 'build',
     effect: {
         type: 'createRoom',
         roomType: 'monster',
@@ -1230,7 +1229,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_steal_soul',
     name: 'Steal Soul',
     spellType: 'instant',
-    phase: SpellPhase.End,
+    phase: 'end',
     effect: {
         type: 'stealSoul',
         target: 'opponent'
@@ -1244,7 +1243,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_underworld',
     name: 'Call from the Underworld',
     spellType: 'instant',
-    phase: SpellPhase.Any,
+    phase: 'any',
     effect: {
         type: 'retrieveFromDiscard',
         cardType: 'room',
@@ -1259,7 +1258,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_super_strength',
     name: 'Super Strength',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'doubleDamage',
         target: 'allRooms',
@@ -1274,7 +1273,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_mega_boulder',
     name: 'Mega Boulder',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'damageHero',
         value: 8,
@@ -1289,7 +1288,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_combo_attack',
     name: 'Combo Attack',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'damageHero',
         value: 2,
@@ -1304,7 +1303,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_power_up',
     name: 'Power Up',
     spellType: 'instant',
-    phase: SpellPhase.Build,
+    phase: 'build',
     effect: {
         type: 'addDamageCounter',
         value: 2,
@@ -1319,7 +1318,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_boss_mode',
     name: 'Boss Mode',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'bossAttack',
         value: 5
@@ -1333,7 +1332,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_extra_life',
     name: 'Extra Life',
     spellType: 'instant',
-    phase: SpellPhase.End,
+    phase: 'end',
     effect: {
         type: 'healWound',
         value: 2
@@ -1347,7 +1346,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_continue',
     name: 'Continue?',
     spellType: 'instant',
-    phase: SpellPhase.End,
+    phase: 'end',
     effect: {
         type: 'preventElimination',
         duration: 'turn'
@@ -1361,7 +1360,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_cheat_code',
     name: 'Cheat Code',
     spellType: 'instant',
-    phase: SpellPhase.Any,
+    phase: 'any',
     effect: {
         type: 'drawCard',
         value: 3,
@@ -1376,7 +1375,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_decade_of_doom',
     name: 'Decade of Doom',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'damageHero',
         value: 10
@@ -1390,7 +1389,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_legacy_spell',
     name: 'Legacy Spell',
     spellType: 'instant',
-    phase: SpellPhase.Any,
+    phase: 'any',
     effect: {
         type: 'copySpell',
         target: 'discard'
@@ -1404,7 +1403,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_anniversary_celebration',
     name: 'Anniversary Celebration',
     spellType: 'instant',
-    phase: SpellPhase.Any,
+    phase: 'any',
     effect: {
         type: 'multiEffect',
         effects: ["drawRoom","drawSpell","gainCoins"],
@@ -1419,7 +1418,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_hyper_beam',
     name: 'Hyper Beam',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'damageHero',
         value: 6
@@ -1433,7 +1432,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_ultra_shield',
     name: 'Ultra Shield',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'preventDamage',
         target: 'allRooms',
@@ -1448,7 +1447,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_mega_drain',
     name: 'Mega Drain',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'damageAndHeal',
         damageValue: 3,
@@ -1463,7 +1462,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_power_surge',
     name: 'Power Surge',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'addDamageCounters',
         value: 3,
@@ -1478,7 +1477,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_boss_strike',
     name: 'Boss Strike',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'bossAttack',
         damageValue: 'bossXP'
@@ -1492,7 +1491,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_game_over',
     name: 'Game Over',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'killHero',
         condition: 'halfHealth'
@@ -1506,7 +1505,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_decade_strike',
     name: 'Decade Strike',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'damageHero',
         value: 5
@@ -1520,7 +1519,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_legacy_magic',
     name: 'Legacy Magic',
     spellType: 'instant',
-    phase: SpellPhase.Any,
+    phase: 'any',
     effect: {
         type: 'retrieveFromDiscard',
         cardType: 'spell',
@@ -1535,7 +1534,7 @@ export const SPELLS: SpellCard[] = [
     id: 'spell_birthday_bash',
     name: 'Birthday Bash',
     spellType: 'instant',
-    phase: SpellPhase.Adventure,
+    phase: 'adventure',
     effect: {
         type: 'damageAllHeroes',
         value: 2
