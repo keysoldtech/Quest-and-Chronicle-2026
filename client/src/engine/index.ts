@@ -1,0 +1,11 @@
+export { createInitialState, getPlayer, getSoulCount, getWoundCount, getNetScore, getDungeonDamage, getTreasureCount, isDungeonFull, getRoomsInHand, getSpellsInHand } from './game-state';
+export { calculateLuring, getTreasureSummary } from './treasure-calculator';
+export { resolveHeroCombat, processAdventureForPlayer } from './combat-resolver';
+export { resolveOnBuildEffect, resolveRoomAbility, resolveBossLevelUp, hasBossPassive, getBossPassiveDamageBonus } from './effect-resolver';
+export { canPlaySpell, pushSpell, resolveSpellStack } from './spell-stack';
+export { checkWinCondition } from './win-condition';
+export { executeTownPhase, executeBuildPhase, executeBaitPhase, executeAdventurePhase, executeEndPhase, executeRound, validateBuild, executeBuild } from './turn-engine';
+export type { BuildAction } from './turn-engine';
+export type { CombatResult, CombatEvent } from './combat-resolver';
+export type { LureResult } from './treasure-calculator';
+export type { WinCheckResult } from './win-condition';
