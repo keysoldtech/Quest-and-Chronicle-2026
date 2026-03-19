@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import type {
   GameState, GameConfig, BossCard, RoomCard, SpellCard,
-  PlayerState, Phase,
+  PlayerState, Phase, MinibossCard,
 } from '../data/types';
 import { createInitialState } from '../engine/game-state';
 import {
@@ -19,24 +19,17 @@ export interface GameStore {
   screen: GameScreen;
   state: GameState | null;
   db: CardDatabase | null;
-  selectedBosses: BossCard[];
   humanPlayerIndex: number;
   aiPlayerIndices: number[];
-  animatingAdventure: boolean;
   adventureLog: string[];
 
-  // Setup actions
   startGame: (config: GameConfig, humanBoss: BossCard, aiBosses: BossCard[]) => void;
-
-  // Phase execution
   advancePhase: () => void;
-
-  // Player actions
-  buildRoom: (roomCard: RoomCard, position: number | 'new') => void;
+  buildRoom: (roomCard: RoomCard, position: number | 'new', miniboss?: MinibossCard) => void;
   skipBuild: () => void;
   playSpell: (spell: SpellCard) => void;
-
-  // Queries
+  promoteMiniboss: (roomIndex: number) => void;
+  useItem: (itemIndex: number) => void;
   getHumanPlayer: () => PlayerState | null;
   getPhaseLabel: () => string;
   canBuild: (room: RoomCard, position: number | 'new') => string | null;
@@ -46,10 +39,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
   screen: 'setup',
   state: null,
   db: null,
-  selectedBosses: [],
   humanPlayerIndex: 0,
   aiPlayerIndices: [],
-  animatingAdventure: false,
   adventureLog: [],
 
   startGame: (config, humanBoss, aiBosses) => {
@@ -57,7 +48,6 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const db = new CardDatabase(config.expansions);
     const state = createInitialState(config, allBosses);
 
-    // Name the players
     state.players[0].name = 'You';
     for (let i = 1; i < state.players.length; i++) {
       state.players[i].name = aiBosses[i - 1].name;
@@ -74,13 +64,12 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   advancePhase: () => {
-    const { state } = get();
+    const { state, aiPlayerIndices } = get();
     if (!state || state.gameOver) return;
 
     const phase = state.currentPhase;
 
     if (phase === 'build' || phase === 'end') {
-      // Start a new round: Town → Build (waiting for player input)
       executeTownPhase(state);
       state.currentPhase = 'build';
       set({ state: { ...state }, adventureLog: [] });
@@ -88,14 +77,26 @@ export const useGameStore = create<GameStore>((set, get) => ({
     }
 
     if (phase === 'bait') {
-      // Bait → Adventure → End
+      // AI plays adventure spells before combat
+      for (const idx of aiPlayerIndices) {
+        const aiPlayer = state.players[idx];
+        const spell = makeSpellDecision(state, aiPlayer);
+        if (spell) {
+          const si = aiPlayer.hand.findIndex(c => c === spell);
+          if (si >= 0) {
+            aiPlayer.hand.splice(si, 1);
+            pushSpell(state, aiPlayer.id, spell);
+          }
+        }
+      }
+      resolveSpellStack(state);
+
       const assignments = executeBaitPhase(state);
       executeAdventurePhase(state, assignments);
 
-      // Collect adventure log entries
       const adventureEntries = state.log
         .filter(e => e.phase === 'adventure' || e.phase === 'bait')
-        .slice(-50)
+        .slice(-80)
         .map(e => e.details);
 
       const gameOver = executeEndPhase(state);
@@ -109,7 +110,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     }
   },
 
-  buildRoom: (roomCard, position) => {
+  buildRoom: (roomCard, position, miniboss) => {
     const { state, aiPlayerIndices } = get();
     if (!state || state.currentPhase !== 'build') return;
 
@@ -118,9 +119,9 @@ export const useGameStore = create<GameStore>((set, get) => ({
       playerId: humanPlayer.id,
       roomCard,
       position,
+      attachMiniboss: miniboss,
     };
 
-    // Get AI build actions
     const aiActions: BuildAction[] = aiPlayerIndices.map(idx => {
       const aiPlayer = state.players[idx];
       return makeBuildDecision(state, aiPlayer);
@@ -142,7 +143,6 @@ export const useGameStore = create<GameStore>((set, get) => ({
     }
     resolveSpellStack(state);
 
-    // Move to bait phase
     state.currentPhase = 'bait';
     set({ state: { ...state } });
   },
@@ -173,6 +173,33 @@ export const useGameStore = create<GameStore>((set, get) => ({
     player.hand.splice(idx, 1);
     pushSpell(state, player.id, spell);
     resolveSpellStack(state);
+    set({ state: { ...state } });
+  },
+
+  promoteMiniboss: (roomIndex) => {
+    const { state } = get();
+    if (!state || !state.config.modules.minibosses) return;
+    const player = state.players[get().humanPlayerIndex];
+    const room = player.dungeon[roomIndex];
+    if (!room?.attachedMiniboss) return;
+    if (room.attachedMiniboss.currentLevel >= 3) return;
+
+    const cost = room.attachedMiniboss.currentLevel * 2;
+    if (player.coins < cost) return;
+
+    player.coins -= cost;
+    room.attachedMiniboss.currentLevel++;
+    set({ state: { ...state } });
+  },
+
+  useItem: (itemIndex) => {
+    const { state } = get();
+    if (!state || !state.config.modules.items) return;
+    const player = state.players[get().humanPlayerIndex];
+    const item = player.claimedItems[itemIndex];
+    if (!item || !item.faceUp) return;
+
+    item.faceUp = false;
     set({ state: { ...state } });
   },
 

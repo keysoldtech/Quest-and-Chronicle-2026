@@ -1,5 +1,5 @@
 import type {
-  BossCard, RoomCard, HeroCard, SpellCard, ItemCard,
+  BossCard, RoomCard, HeroCard, SpellCard, MinibossCard, ItemCard,
   AnyCard, TreasureType, Expansion,
 } from './types';
 import { BOSSES } from './cards/bosses';
@@ -8,6 +8,7 @@ import { TRAP_ROOMS } from './cards/rooms-trap';
 import { HEROES } from './cards/heroes';
 import { SPELLS } from './cards/spells';
 import { ITEMS } from './cards/items';
+import { MINIBOSSES } from './cards/minibosses';
 
 function shuffle<T>(array: T[]): T[] {
   const a = [...array];
@@ -34,6 +35,7 @@ export class CardDatabase {
   readonly heroes: HeroCard[];
   readonly spells: SpellCard[];
   readonly items: ItemCard[];
+  readonly minibosses: MinibossCard[];
 
   constructor(expansions?: Expansion[]) {
     const expSet = expansions ? new Set(expansions) : null;
@@ -46,6 +48,7 @@ export class CardDatabase {
     this.heroes = filterExp(HEROES);
     this.spells = filterExp(SPELLS);
     this.items = filterExp(ITEMS);
+    this.minibosses = filterExp(MINIBOSSES);
   }
 
   getAllRooms(): RoomCard[] {
@@ -110,6 +113,10 @@ export class CardDatabase {
   /** Create a shuffled item deck expanded by quantity. */
   createItemDeck(): ItemCard[] {
     return shuffle(expandByQuantity(this.items));
+  }
+
+  createMinibossDeck(): MinibossCard[] {
+    return shuffle(expandByQuantity(this.minibosses.filter(mb => mb.level === 1)));
   }
 
   /** Get N random bosses for player selection. */

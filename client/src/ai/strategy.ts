@@ -1,11 +1,12 @@
-import type { GameState, PlayerState, SpellCard } from '../data/types';
-import { getRoomsInHand, getSpellsInHand, isDungeonFull } from '../engine/game-state';
+import type { GameState, PlayerState, RoomCard, SpellCard, MinibossCard } from '../data/types';
+import { getRoomsInHand, getSpellsInHand, isDungeonFull, getTreasureCount } from '../engine/game-state';
 import { validateBuild, type BuildAction } from '../engine/turn-engine';
 import { canPlaySpell } from '../engine/spell-stack';
 
 /**
- * AI build decision: pick the best room to build.
- * Strategy: prioritize highest damage, prefer filling empty slots, then upgrades.
+ * AI build decision: treasure-aware room selection.
+ * Prioritizes rooms whose treasure type matches heroes currently in town,
+ * then falls back to highest damage.
  */
 export function makeBuildDecision(
   state: GameState,
@@ -14,52 +15,66 @@ export function makeBuildDecision(
   const rooms = getRoomsInHand(player);
   if (rooms.length === 0) return null;
 
-  // Sort rooms by damage (highest first), then by whether they have abilities
-  const scored = rooms.map(room => ({
-    room,
-    score: room.damage * 10 + (room.ability ? 5 : 0) + (room.isAdvanced ? 3 : 0),
-  })).sort((a, b) => b.score - a.score);
+  // Score rooms by: treasure demand (heroes in town) + damage + ability bonus
+  const townTreasureDemand: Record<string, number> = {};
+  for (const hero of state.town) {
+    townTreasureDemand[hero.card.treasure] = (townTreasureDemand[hero.card.treasure] ?? 0) + 1;
+  }
+
+  const scored = rooms.map(room => {
+    const treasures = Array.isArray(room.treasure) ? room.treasure : [room.treasure];
+    let score = room.damage * 10;
+    score += room.ability ? 5 : 0;
+    score += room.isAdvanced ? 8 : 0;
+
+    // Bonus for matching treasure types that heroes in town want
+    for (const t of treasures) {
+      score += (townTreasureDemand[t] ?? 0) * 15;
+    }
+
+    // Bonus if we're currently losing the treasure race for this type
+    for (const t of treasures) {
+      const myCount = getTreasureCount(player, t);
+      const maxOpponent = Math.max(
+        ...state.players.filter(p => p.id !== player.id).map(p => getTreasureCount(p, t))
+      );
+      if (myCount <= maxOpponent) score += 10;
+    }
+
+    return { room, score };
+  }).sort((a, b) => b.score - a.score);
 
   for (const { room } of scored) {
-    // Try building in a new slot first
+    // Try new slot first
     if (!isDungeonFull(player)) {
-      const error = validateBuild(state, {
-        playerId: player.id,
-        roomCard: room,
-        position: 'new',
-      });
-      if (!error) {
-        return { playerId: player.id, roomCard: room, position: 'new' };
+      const err = validateBuild(state, { playerId: player.id, roomCard: room, position: 'new' });
+      if (!err) {
+        const mb = pickMinibossToAttach(player, room);
+        return { playerId: player.id, roomCard: room, position: 'new', attachMiniboss: mb ?? undefined };
       }
     }
 
-    // Try building on top of lowest-damage existing room
+    // Try upgrading weakest room (only if new room is stronger)
     if (player.dungeon.length > 0) {
-      const sortedSlots = [...player.dungeon]
-        .sort((a, b) => a.card.damage - b.card.damage);
+      const weakest = [...player.dungeon]
+        .sort((a, b) => (a.card.damage + a.damageCounters) - (b.card.damage + b.damageCounters));
 
-      for (const slot of sortedSlots) {
+      for (const slot of weakest) {
         if (room.damage <= slot.card.damage && !room.isAdvanced) continue;
         const pos = player.dungeon.indexOf(slot);
-        const error = validateBuild(state, {
-          playerId: player.id,
-          roomCard: room,
-          position: pos,
-        });
-        if (!error) {
+        const err = validateBuild(state, { playerId: player.id, roomCard: room, position: pos });
+        if (!err) {
           return { playerId: player.id, roomCard: room, position: pos };
         }
       }
     }
   }
 
-  // Fall back to building any valid room
+  // Fall back: any valid build
   for (const room of rooms) {
     if (!isDungeonFull(player)) {
-      const error = validateBuild(state, {
-        playerId: player.id, roomCard: room, position: 'new',
-      });
-      if (!error) return { playerId: player.id, roomCard: room, position: 'new' };
+      const err = validateBuild(state, { playerId: player.id, roomCard: room, position: 'new' });
+      if (!err) return { playerId: player.id, roomCard: room, position: 'new' };
     }
   }
 
@@ -67,8 +82,7 @@ export function makeBuildDecision(
 }
 
 /**
- * AI spell decision: play a spell if beneficial.
- * Only plays during build phase for now (simple strategy).
+ * AI spell decision: considers all phases.
  */
 export function makeSpellDecision(
   state: GameState,
@@ -77,21 +91,42 @@ export function makeSpellDecision(
   const spells = getSpellsInHand(player);
   if (spells.length === 0) return null;
 
-  // During build phase, play draw spells or build-enhancing spells
   for (const spell of spells) {
     if (!canPlaySpell(state, spell)) continue;
 
     // Play draw spells eagerly
-    if (spell.effect.type === 'drawRoom' || spell.effect.type === 'drawSpell' ||
-        spell.effect.type === 'drawCard') {
+    if (['drawRoom', 'drawSpell', 'drawCard', 'drawMiniboss'].includes(spell.effect.type)) {
       return spell;
     }
 
-    // Play build-related spells
-    if (spell.effect.type === 'buildExtraRoom' && getRoomsInHand(player).length > 1) {
+    // Play heal spells when wounded
+    if (spell.effect.type === 'healWound' && player.wounds.length > 0) {
+      return spell;
+    }
+
+    // Play coin spells when coins module is active
+    if (spell.effect.type === 'gainCoins' && state.config.modules.coins) {
+      return spell;
+    }
+
+    // Play damage spells during adventure if there are heroes
+    if (state.currentPhase === 'adventure' || state.currentPhase === 'bait') {
+      if (['damageHero', 'killHero', 'bonusDamage'].includes(spell.effect.type) && state.town.length > 0) {
+        return spell;
+      }
+    }
+
+    // Play extra build during build phase
+    if (['buildExtraRoom', 'extraBuild'].includes(spell.effect.type) && getRoomsInHand(player).length > 1) {
       return spell;
     }
   }
 
   return null;
+}
+
+function pickMinibossToAttach(player: PlayerState, _room: RoomCard): MinibossCard | null {
+  if (player.minibossHand.length === 0) return null;
+  // Attach the first available miniboss
+  return player.minibossHand[0];
 }

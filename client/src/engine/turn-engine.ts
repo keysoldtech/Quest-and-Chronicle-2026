@@ -1,5 +1,5 @@
 import type {
-  GameState, RoomCard, DungeonRoom, HeroInstance,
+  GameState, RoomCard, DungeonRoom, HeroInstance, MinibossCard,
 } from '../data/types';
 import {
   addToLog, isDungeonFull,
@@ -13,10 +13,6 @@ import { drawCards, drawOne } from '../utils/shuffle';
 
 // ── Town Phase ──────────────────────────────────────────────────
 
-/**
- * Draw heroes from the appropriate deck and place them in town.
- * Hero Mode determines which deck to draw from.
- */
 export function executeTownPhase(state: GameState): void {
   state.currentPhase = 'town';
   addToLog(state, '', 'phase', `=== Round ${state.roundNumber + 1}: Town Phase ===`);
@@ -27,35 +23,44 @@ export function executeTownPhase(state: GameState): void {
   let drawnHeroes: typeof state.decks.heroOrdinary = [];
 
   if (heroMode === 'h1') {
-    // H1: First 7 rounds = ordinary, then epic
     if (state.roundNumber < 7) {
       drawnHeroes = drawCards(state.decks.heroOrdinary, heroCount);
     } else {
       drawnHeroes = drawCards(state.decks.heroEpic, heroCount);
       if (drawnHeroes.length < heroCount) {
-        // Fill remaining from ordinary if epic runs out
         drawnHeroes.push(...drawCards(state.decks.heroOrdinary, heroCount - drawnHeroes.length));
       }
     }
   } else if (heroMode === 'h2') {
-    // H2: Ordinary runs out, then epic
     drawnHeroes = drawCards(state.decks.heroOrdinary, heroCount);
     if (drawnHeroes.length < heroCount) {
       drawnHeroes.push(...drawCards(state.decks.heroEpic, heroCount - drawnHeroes.length));
     }
   } else {
-    // H3: Combined deck (would need to be pre-shuffled at setup)
     drawnHeroes = drawCards(state.decks.heroOrdinary, heroCount);
   }
 
   for (const hero of drawnHeroes) {
-    state.town.push({
+    const heroInst: HeroInstance = {
       card: hero,
       currentHP: hero.health,
       attachedItem: null,
       turnsInTown: 0,
-    });
-    addToLog(state, '', 'hero_arrives', `${hero.name} (${hero.class}, HP:${hero.health}) arrives in town`);
+    };
+
+    // Items module: attach item to hero
+    if (state.config.modules.items && state.decks.item.length > 0) {
+      const item = state.decks.item[0];
+      const itemTreasure = item.treasure;
+      if (!itemTreasure || itemTreasure === hero.treasure) {
+        heroInst.attachedItem = state.decks.item.shift()!;
+        addToLog(state, '', 'item_attach', `${heroInst.attachedItem.name} attached to ${hero.name}`);
+      }
+    }
+
+    state.town.push(heroInst);
+    addToLog(state, '', 'hero_arrives',
+      `${hero.name} (${hero.class}, HP:${hero.health}${heroInst.attachedItem ? `, carrying ${heroInst.attachedItem.name}` : ''}) arrives in town`);
   }
 
   // Increment turnsInTown for heroes already in town
@@ -71,12 +76,10 @@ export function executeTownPhase(state: GameState): void {
 export interface BuildAction {
   playerId: string;
   roomCard: RoomCard;
-  position: number | 'new'; // index to build on top of, or 'new' for new slot
+  position: number | 'new';
+  attachMiniboss?: MinibossCard;
 }
 
-/**
- * Validate whether a build action is legal.
- */
 export function validateBuild(state: GameState, action: BuildAction): string | null {
   const player = state.players.find(p => p.id === action.playerId);
   if (!player) return 'Player not found';
@@ -85,7 +88,6 @@ export function validateBuild(state: GameState, action: BuildAction): string | n
   const handIdx = player.hand.indexOf(card);
   if (handIdx < 0) return 'Card not in hand';
 
-  // Check dungeon-full first for any room type trying to add a new slot
   if (action.position === 'new' && isDungeonFull(player)) {
     return 'Dungeon is full (5 rooms max)';
   }
@@ -107,14 +109,10 @@ export function validateBuild(state: GameState, action: BuildAction): string | n
   return null;
 }
 
-/**
- * Execute a build action for a player.
- */
 export function executeBuild(state: GameState, action: BuildAction): void {
   const player = state.players.find(p => p.id === action.playerId)!;
   const card = action.roomCard;
 
-  // Remove from hand
   const handIdx = player.hand.indexOf(card);
   player.hand.splice(handIdx, 1);
 
@@ -131,11 +129,13 @@ export function executeBuild(state: GameState, action: BuildAction): void {
     newRoom.position = player.dungeon.length;
     player.dungeon.push(newRoom);
   } else {
-    // Build on top of existing room
     const oldRoom = player.dungeon[action.position];
+    // onDestroy ability for the covered room
+    if (oldRoom.card.ability?.trigger === 'onDestroy') {
+      resolveOnDestroyAbility(state, player, oldRoom);
+    }
     state.discards.room.push(oldRoom.card);
     newRoom.position = action.position;
-    // Preserve miniboss attachment
     newRoom.attachedMiniboss = oldRoom.attachedMiniboss;
     player.dungeon[action.position] = newRoom;
   }
@@ -143,23 +143,78 @@ export function executeBuild(state: GameState, action: BuildAction): void {
   addToLog(state, player.id, 'build',
     `Built ${card.name} (${card.roomType}, ${card.damage} dmg) at position ${newRoom.position}`);
 
-  // Resolve "When Built" ability
+  // Attach miniboss if provided
+  if (action.attachMiniboss && state.config.modules.minibosses) {
+    const mbIdx = player.minibossHand.indexOf(action.attachMiniboss);
+    if (mbIdx >= 0) {
+      player.minibossHand.splice(mbIdx, 1);
+      newRoom.attachedMiniboss = {
+        card: action.attachMiniboss,
+        currentLevel: 1,
+      };
+      addToLog(state, player.id, 'attach_miniboss',
+        `Attached ${action.attachMiniboss.name} to ${card.name}`);
+    }
+  }
+
   resolveOnBuildEffect(state, player, newRoom);
 
-  // Check boss level-up
   if (player.dungeon.length >= 5 && !player.bossLeveledUp) {
     resolveBossLevelUp(state, player);
   }
 }
 
-/**
- * Execute the Build phase for all players.
- * In a real game this would be simultaneous face-down then reveal.
- * For the engine, we process in turn order.
- */
+function resolveOnDestroyAbility(state: GameState, player: any, room: DungeonRoom): void {
+  const ability = room.card.ability;
+  if (!ability || ability.trigger !== 'onDestroy') return;
+
+  switch (ability.effect) {
+    case 'drawRoom': {
+      const count = ability.value ?? 1;
+      const drawn = drawCards(state.decks.room, count);
+      for (const c of drawn) player.hand.push(c);
+      addToLog(state, player.id, 'room_destroy', `${room.card.name} destroyed: drew ${count} room(s)`);
+      break;
+    }
+    case 'drawSpell': {
+      const count = ability.value ?? 1;
+      const drawn = drawCards(state.decks.spell, count);
+      for (const c of drawn) player.hand.push(c);
+      addToLog(state, player.id, 'room_destroy', `${room.card.name} destroyed: drew ${count} spell(s)`);
+      break;
+    }
+    case 'buildCopy': {
+      addToLog(state, player.id, 'room_destroy', `${room.card.name} destroyed: may rebuild a copy`);
+      break;
+    }
+    default:
+      addToLog(state, player.id, 'room_destroy', `${room.card.name} destroyed: ${ability.description}`);
+  }
+}
+
 export function executeBuildPhase(state: GameState, actions: BuildAction[]): void {
   state.currentPhase = 'build';
   addToLog(state, '', 'phase', '=== Build Phase ===');
+
+  // Coins module: grant start-of-turn coins
+  if (state.config.modules.coins) {
+    for (const p of state.players) {
+      p.coins += 1;
+      addToLog(state, p.id, 'coins', 'Gained 1 coin (start of turn)');
+    }
+  }
+
+  // Miniboss module: draw miniboss card each turn
+  if (state.config.modules.minibosses && state.decks.miniboss.length > 0) {
+    for (const idx of state.turnOrder) {
+      const p = state.players[idx];
+      const drawn = drawOne(state.decks.miniboss);
+      if (drawn) {
+        p.minibossHand.push(drawn);
+        addToLog(state, p.id, 'draw', `Drew miniboss: ${drawn.name}`);
+      }
+    }
+  }
 
   for (const idx of state.turnOrder) {
     const player = state.players[idx];
@@ -188,22 +243,21 @@ export function executeBaitPhase(state: GameState): Map<string, HeroInstance[]> 
 
   for (const p of state.players) assignments.set(p.id, []);
 
-  // Process lure results (iterate backwards so splice doesn't break indices)
   const toRemove: number[] = [];
   for (const result of lureResults) {
     if (result.targetPlayerId) {
       const hero = state.town[result.heroIndex];
       assignments.get(result.targetPlayerId)!.push(hero);
       toRemove.push(result.heroIndex);
+      const targetPlayer = state.players.find(p => p.id === result.targetPlayerId)!;
       addToLog(state, result.targetPlayerId, 'lure',
-        `${hero.card.name} lured to ${state.players.find(p => p.id === result.targetPlayerId)!.name}'s dungeon`);
+        `${hero.card.name} lured to ${targetPlayer.name}'s dungeon`);
     } else {
       const hero = state.town[result.heroIndex];
       addToLog(state, '', 'lure', `${hero.card.name} stays in town (tie)`);
     }
   }
 
-  // Remove lured heroes from town (reverse order to preserve indices)
   toRemove.sort((a, b) => b - a);
   for (const idx of toRemove) {
     state.town.splice(idx, 1);
@@ -233,7 +287,6 @@ export function executeAdventurePhase(
     processAdventureForPlayer(state, player, heroes);
   }
 
-  // Resolve any pending spells
   resolveSpellStack(state);
 }
 
@@ -243,7 +296,6 @@ export function executeEndPhase(state: GameState): boolean {
   state.currentPhase = 'end';
   addToLog(state, '', 'phase', '=== End Phase ===');
 
-  // Draw 1 room card for each player at end of round
   for (const idx of state.turnOrder) {
     const player = state.players[idx];
     const drawn = drawOne(state.decks.room);
@@ -251,18 +303,28 @@ export function executeEndPhase(state: GameState): boolean {
       player.hand.push(drawn);
       addToLog(state, player.id, 'draw', `Drew ${drawn.name}`);
     }
+
+    // Also draw a spell if spell deck has cards
+    if (state.decks.spell.length > 0 && state.roundNumber % 2 === 0) {
+      const spellDrawn = drawOne(state.decks.spell);
+      if (spellDrawn) {
+        player.hand.push(spellDrawn);
+        addToLog(state, player.id, 'draw', `Drew spell: ${spellDrawn.name}`);
+      }
+    }
   }
 
   // Reset per-turn flags
   for (const p of state.players) {
     p.usedLevelUpThisTurn = false;
-    // Reactivate deactivated rooms
     for (const r of p.dungeon) {
       r.isDeactivated = false;
     }
   }
 
-  // Check win conditions
+  // Miniboss module: promote minibosses that can be promoted (auto for AI)
+  // (Player promotion handled via UI)
+
   const result = checkWinCondition(state);
 
   if (result.gameOver) {
@@ -272,7 +334,6 @@ export function executeEndPhase(state: GameState): boolean {
     return true;
   }
 
-  // Handle eliminations in standard mode
   for (const elimId of result.eliminatedPlayers) {
     addToLog(state, elimId, 'eliminated',
       `${state.players.find(p => p.id === elimId)!.name} has been eliminated!`);
@@ -284,23 +345,10 @@ export function executeEndPhase(state: GameState): boolean {
 
 // ── Full Round ──────────────────────────────────────────────────
 
-/**
- * Execute a complete round of the game.
- * Returns true if the game is over.
- */
 export function executeRound(state: GameState, buildActions: BuildAction[]): boolean {
-  // 1. Town Phase
   executeTownPhase(state);
-
-  // 2. Build Phase
   executeBuildPhase(state, buildActions);
-
-  // 3. Bait Phase
   const assignments = executeBaitPhase(state);
-
-  // 4. Adventure Phase
   executeAdventurePhase(state, assignments);
-
-  // 5. End Phase
   return executeEndPhase(state);
 }
