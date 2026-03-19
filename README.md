@@ -1,6 +1,6 @@
 # Quest and Chronicle 2026
 
-A digital card game inspired by Boss Monster, built using the **Unified Boss Monster System (UBMS)** ruleset that merges all Boss Monster expansions into a single unified experience.
+A digital card game inspired by Boss Monster, built using the **Unified Boss Monster System (UBMS)** ruleset that merges all Boss Monster expansions into a single unified experience. Browser-first, installable as a PWA, and wrappable in Chromium (Tauri/Electron) for desktop distribution.
 
 ## Project Status
 
@@ -31,9 +31,18 @@ Players take on the role of dungeon bosses, building rooms to lure and defeat he
 - **2-6 player support** with variant rules for larger games
 - **Boss level-up system** with one-time powerful abilities
 
+## Platform Targets
+
+| Target | Status | Details |
+|---|---|---|
+| **Browser** | Primary | All development and testing in a browser tab via `npm run dev` |
+| **PWA** | Phase 2 | Installable web app with offline single-player support |
+| **Desktop** | Phase 5 | Tauri or Electron wrapper for native desktop distribution |
+
 ## Next Steps
 
 1. Fix card data files (syntax errors and incomplete entries)
 2. Build the core game engine (turn loop, combat resolver, effect system)
-3. Create single-player UI with AI opponent
+3. Create single-player UI with AI opponent + PWA support
 4. Add multiplayer support
+5. Wrap in Tauri/Electron for desktop app

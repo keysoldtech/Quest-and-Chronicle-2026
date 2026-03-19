@@ -30,17 +30,38 @@ The card data files have **syntax errors** and **incomplete entries** that need 
 
 ## 2. Architecture Recommendation
 
+### Platform Strategy: Browser-First → PWA → Desktop
+
+The game is built as a **web application first**, testable in any browser from day one. It then layers on PWA capabilities for install-to-homescreen and offline play, and can later be wrapped in a Chromium shell for native desktop distribution.
+
+```
+Browser Tab (dev/test)  →  PWA (installable, offline)  →  Electron/Tauri (desktop app)
+         ↑                        ↑                              ↑
+    works immediately        service worker +               wraps the same
+    via dev server           manifest added                 web app in a
+    (localhost:3000)         in Phase 2                     native window
+```
+
+**Why this works:**
+- The entire game runs client-side in the browser (game engine, UI, AI opponent)
+- Multiplayer uses WebSockets which work identically in browsers, PWAs, and Electron
+- No native APIs needed — it's a card game, not a 3D shooter
+- PWA install gives near-native feel on desktop and mobile with zero additional code
+- Electron/Tauri wrapping is a thin shell around the same deployed web app
+
 ### Technology Stack
 
 | Layer | Recommendation | Rationale |
 |---|---|---|
-| **Frontend** | React + TypeScript | Component-based UI ideal for card games; strong typing prevents card data bugs |
-| **State Management** | Zustand or Redux Toolkit | Complex game state (multiple player dungeons, hero traversal, spell stack) |
+| **Frontend** | React + TypeScript + Vite | Component-based UI; Vite gives fast dev server (browser-testable at localhost), optimized production builds, and built-in PWA plugin support |
+| **State Management** | Zustand | Lightweight, works seamlessly in browser/PWA/Electron; no boilerplate like Redux |
 | **Game Engine** | Custom turn-based engine | Boss Monster is sequential/phase-based, not real-time — a custom engine fits better than a general game framework |
-| **Rendering** | HTML/CSS + Canvas overlay | Cards are primarily static images/data; canvas only needed for animations |
-| **Multiplayer** | Socket.io + Express server | Real-time turn-based communication |
-| **Database** | SQLite or PostgreSQL | Player accounts, match history, card collection |
-| **AI Opponent** | Rule-based + Monte Carlo tree search | For single-player mode |
+| **Rendering** | HTML/CSS + Canvas overlay | Cards are primarily static images/data; canvas only needed for animations. Pure web tech = runs everywhere |
+| **PWA** | vite-plugin-pwa (Workbox) | Adds service worker, web manifest, offline caching with one plugin — no manual service worker authoring |
+| **Multiplayer** | Socket.io + Express server | Real-time turn-based communication; WebSockets work in all deployment targets |
+| **Database** | SQLite (local) or PostgreSQL (server) | Player accounts, match history, card collection |
+| **AI Opponent** | Rule-based + Monte Carlo tree search | Runs entirely client-side for single-player; no server needed |
+| **Desktop (future)** | Electron or Tauri | Wraps the built web app; Tauri preferred (smaller binary, Rust-based) but Electron is simpler if speed matters |
 
 ### Alternative: Simpler Stack (MVP)
 
@@ -48,9 +69,27 @@ For a faster MVP, a simpler approach could work:
 
 | Layer | Choice | Rationale |
 |---|---|---|
-| **Frontend** | Vanilla JS + HTML/CSS | Matches the existing card data format (browser globals); no build step |
+| **Frontend** | Vanilla JS + HTML/CSS | Matches the existing card data format (browser globals); no build step; still browser-testable |
 | **State** | Plain JS objects | Game state is manageable without a framework for 2-4 players |
 | **Multiplayer** | Node.js + Socket.io | Lightweight server |
+| **PWA** | Manual manifest + service worker | ~50 lines of config; no framework needed |
+
+### Browser Testing Workflow
+
+Development and testing happens entirely in the browser:
+
+```
+npm run dev          →  Opens localhost:5173 in browser
+                        Hot-reload on code changes
+                        Full game playable immediately
+
+npm run build        →  Production build (static files)
+npm run preview      →  Preview production build locally
+
+npm run test         →  Vitest runs engine/logic tests in Node
+```
+
+No emulators, no special hardware, no app store submissions during development. Open a browser tab and play.
 
 ---
 
@@ -206,22 +245,25 @@ These map directly to UBMS Section 5 and can each be toggled on/off:
 | 1.9 Win/loss checker | 10 souls, 5 wounds, net score variant |
 | 1.10 Console game | Playable text-based game for testing all logic |
 
-### Phase 2: Single-Player UI
+### Phase 2: Single-Player UI + PWA
 
-**Goal:** Playable single-player game in the browser vs. AI.
+**Goal:** Playable single-player game in the browser vs. AI, installable as a PWA.
 
 | Task | Details |
 |---|---|
-| 2.1 Project scaffolding | React + TypeScript setup, component architecture |
+| 2.1 Project scaffolding | `npm create vite@latest` with React + TypeScript; configure Vitest for testing |
 | 2.2 Card components | Render boss, room, hero, spell, item, miniboss cards |
-| 2.3 Game board layout | Main board with dungeon rows, town, hero deck, hand area |
+| 2.3 Game board layout | Main board with dungeon rows, town, hero deck, hand area — responsive for desktop and tablet |
 | 2.4 Dungeon builder UI | Drag-and-drop room placement, advanced room overlay |
 | 2.5 Adventure animation | Hero walking through rooms, damage popups, death/survival |
 | 2.6 Spell interaction UI | Spell play from hand, interrupt prompts, targeting |
 | 2.7 Phase indicators | Clear display of current phase, whose turn it is |
-| 2.8 AI opponent | Rule-based AI (builds rooms, plays spells, makes build decisions) |
+| 2.8 AI opponent | Rule-based AI (builds rooms, plays spells, makes build decisions) — runs client-side |
 | 2.9 Game setup screen | Boss selection (random/draft), module toggles, player count |
 | 2.10 End game screen | Winner display, score summary |
+| 2.11 PWA setup | Add `vite-plugin-pwa`: web manifest (name, icons, theme), service worker for offline caching, install prompt handling |
+| 2.12 Offline support | Cache all card data/images via service worker; single-player vs. AI works fully offline |
+| 2.13 Responsive layout | Ensure game board works at 1024px+ (desktop/tablet); cards scale properly |
 
 ### Phase 3: Multiplayer
 
@@ -252,6 +294,25 @@ These map directly to UBMS Section 5 and can each be toggled on/off:
 | 4.8 Tutorial | Interactive tutorial teaching game phases |
 | 4.9 Card collection | View all cards, filter by expansion/type |
 | 4.10 Match history | Track wins, losses, favorite bosses |
+
+### Phase 5: Desktop App (Chromium Wrapper)
+
+**Goal:** Distribute as a native desktop application.
+
+| Task | Details |
+|---|---|
+| 5.1 Choose wrapper | **Tauri** (preferred: ~5MB binary, Rust backend) or **Electron** (simpler: ~80MB binary, Node backend) |
+| 5.2 Window configuration | Title bar, icon, minimum window size (1024x768), fullscreen toggle |
+| 5.3 Native integrations | System tray icon, OS notifications for multiplayer invites, auto-updater |
+| 5.4 Build pipeline | CI/CD builds for Windows (.msi/.exe), macOS (.dmg), Linux (.AppImage/.deb) |
+| 5.5 Offline multiplayer | LAN/local network game discovery (mDNS/Bonjour) for desktop-to-desktop play without internet |
+| 5.6 Steam / itch.io | Distribution via game platforms (optional) |
+
+**How the wrapper works:**
+- The desktop app is literally a Chromium window pointed at the built web app
+- All game code is identical to the PWA — same `dist/` folder, same React app
+- Tauri/Electron just provides: native window chrome, OS-level file access (for saves), tray icon, auto-update
+- No game code changes needed — if it works in the browser, it works in the wrapper
 
 ---
 
@@ -349,7 +410,7 @@ Either:
 │   │   │   └── items.ts
 │   │   ├── types.ts              # Card type interfaces
 │   │   └── database.ts           # Card database service
-│   ├── engine/                   # Game logic
+│   ├── engine/                   # Game logic (pure TS, no DOM deps)
 │   │   ├── game-state.ts         # State model
 │   │   ├── turn-engine.ts        # Phase loop
 │   │   ├── combat-resolver.ts    # Adventure phase logic
@@ -366,10 +427,10 @@ Either:
 │   │   ├── hybrid-heroes.ts
 │   │   ├── dark-heroes.ts
 │   │   └── dice.ts
-│   ├── ai/                       # AI opponent
+│   ├── ai/                       # AI opponent (runs client-side)
 │   │   ├── strategy.ts
 │   │   └── decision-tree.ts
-│   ├── ui/                       # Frontend components
+│   ├── ui/                       # Frontend components (React)
 │   │   ├── components/
 │   │   │   ├── Card/
 │   │   │   ├── Dungeon/
@@ -381,15 +442,23 @@ Either:
 │   │   │   ├── GameSetup/
 │   │   │   ├── GameBoard/
 │   │   │   └── GameOver/
+│   │   ├── hooks/                # useGameState, usePhase, etc.
 │   │   └── App.tsx
 │   ├── network/                  # Multiplayer
 │   │   ├── server.ts
 │   │   ├── client.ts
 │   │   └── protocol.ts
+│   ├── pwa/                      # PWA configuration
+│   │   └── sw-config.ts          # Service worker caching strategies
 │   └── utils/
 │       ├── shuffle.ts
 │       └── random.ts
 ├── public/
+│   ├── manifest.json             # PWA web app manifest
+│   ├── icons/                    # PWA icons (192x192, 512x512)
+│   │   ├── icon-192.png
+│   │   ├── icon-512.png
+│   │   └── apple-touch-icon.png
 │   └── images/
 │       └── cards/                # Card artwork
 │           ├── bosses/
@@ -398,17 +467,111 @@ Either:
 │           ├── spells/
 │           ├── items/
 │           └── minibosses/
+├── desktop/                      # Desktop wrapper (Phase 5)
+│   ├── tauri.conf.json           # Tauri config (or electron-builder.yml)
+│   └── src-tauri/                # Tauri Rust glue (auto-generated)
 ├── tests/
 │   ├── engine/
 │   ├── data/
 │   └── integration/
+├── index.html                    # Vite entry point
+├── vite.config.ts                # Vite + PWA plugin config
 ├── package.json
 └── tsconfig.json
 ```
 
 ---
 
-## 8. Risk Assessment
+## 8. Platform & Deployment Strategy
+
+### 8.1 Development & Testing: Browser
+
+All development and testing runs in a standard web browser. No special tools needed.
+
+```
+Developer workflow:
+  1. npm run dev              → Vite dev server at localhost:5173
+  2. Open Chrome/Firefox/Edge → Play the game, test changes
+  3. Hot module reload        → See changes instantly without page refresh
+  4. npm run test             → Vitest runs engine tests in terminal
+  5. Browser DevTools         → Debug, inspect state, profile performance
+```
+
+The game engine (`src/engine/`) is pure TypeScript with zero DOM dependencies, so it can be tested in Node.js via Vitest without a browser. The UI layer uses React and is tested visually in the browser.
+
+### 8.2 PWA: Installable Web App
+
+A Progressive Web App makes the game installable on any device with a browser, without going through an app store.
+
+**What the user gets:**
+- "Install" button in the browser address bar (or an in-game prompt)
+- App icon on their desktop/home screen
+- Opens in its own window (no browser chrome — looks like a native app)
+- Works offline (single-player vs. AI, card collection browsing)
+- Auto-updates when new versions are deployed
+
+**What we need to build:**
+| Component | Details |
+|---|---|
+| `manifest.json` | App name, icons (192px + 512px), theme color, display mode (`standalone`), start URL |
+| Service Worker | Powered by `vite-plugin-pwa` (Workbox under the hood); precaches all static assets (JS, CSS, card images) on install |
+| Offline strategy | **Cache-first** for card data/images (they don't change often); **network-first** for multiplayer API calls |
+| Install prompt | Custom in-game UI that triggers the browser's `beforeinstallprompt` event |
+| Update flow | "New version available" toast when service worker detects an update; user clicks to refresh |
+
+**PWA requirements checklist:**
+- [x] Served over HTTPS (required for service workers) — handled by any modern host (Netlify, Vercel, Cloudflare Pages)
+- [x] Web app manifest with required fields
+- [x] Service worker that caches the app shell
+- [x] Responsive design (1024px+ for gameplay; card viewer works on mobile)
+- [x] Offline fallback page
+
+### 8.3 Desktop App: Chromium Wrapper
+
+For a native desktop feel (tray icon, window controls, auto-updater), the PWA can be wrapped.
+
+| Option | Binary Size | Language | Pros | Cons |
+|---|---|---|---|---|
+| **Tauri** | ~5-10 MB | Rust + Web | Tiny binary, fast, secure, uses OS webview | Requires Rust toolchain to build; webview rendering varies slightly by OS |
+| **Electron** | ~80-150 MB | Node + Chromium | Proven, huge ecosystem, consistent rendering | Large binary, higher memory usage |
+
+**Recommendation:** Start with **Tauri** for the smaller footprint. Fall back to Electron only if OS webview inconsistencies cause rendering issues.
+
+**What wrapping adds over the PWA:**
+- Native window title bar and controls
+- System tray icon with quick actions
+- OS-level notifications (multiplayer invites, turn reminders)
+- Auto-updater (no need to revisit a website)
+- Local file access for save games (optional)
+- LAN game discovery via mDNS (play with friends on same network without internet)
+
+**What wrapping does NOT require:**
+- No game code changes — the wrapper loads the same built web app
+- No separate codebase — one `npm run build`, wrapper loads `dist/index.html`
+- No special APIs — if it works in the browser, it works in the wrapper
+
+### 8.4 Deployment Targets Summary
+
+| Target | When | How | Offline? |
+|---|---|---|---|
+| **Browser tab** | Phase 1+ (day one) | `npm run dev` or deploy to any static host | No (dev), Yes (PWA build) |
+| **PWA (installed)** | Phase 2 | Deploy to Netlify/Vercel/Cloudflare Pages; user clicks "Install" | Yes (single-player) |
+| **Desktop (Tauri/Electron)** | Phase 5 | `npm run build:desktop`; distribute .exe/.dmg/.AppImage | Yes (single-player) |
+| **Mobile (stretch goal)** | Future | PWA already works on mobile browsers; or wrap with Capacitor for app stores | Yes (PWA) |
+
+### 8.5 Architectural Constraints for Platform Compatibility
+
+To ensure the game works across all deployment targets, these rules apply to all code:
+
+1. **No server dependency for single-player.** The game engine, AI, and all card data must run entirely client-side. The server is only needed for multiplayer matchmaking.
+2. **No Node.js APIs in the game engine.** The `src/engine/` directory must be pure TypeScript with no `fs`, `path`, `process`, or other Node imports. This ensures it runs in browsers, service workers, and Tauri's webview.
+3. **All assets must be cacheable.** Card images, fonts, sounds — everything served as static files so the service worker can precache them.
+4. **WebSocket-based multiplayer.** WebSockets work identically in browsers, PWAs, and Electron/Tauri. No proprietary networking.
+5. **Responsive CSS, not fixed pixels.** The game board must adapt to different window sizes (PWA on a 13" laptop vs. Electron fullscreen on a 27" monitor vs. a browser tab taking half the screen).
+
+---
+
+## 9. Risk Assessment
 
 | Risk | Impact | Mitigation |
 |---|---|---|
@@ -418,10 +581,13 @@ Either:
 | **Art/images** | Medium — no card artwork included | Use text-only cards initially; add placeholder art; consider pixel art generation |
 | **Multiplayer cheating** | Medium — clients could see hidden info | Server-authoritative architecture; never send opponent hand data to client |
 | **Scope creep** | High — 8 optional modules is a lot | Phase the modules; MVP with base game only; add modules one at a time |
+| **PWA cache invalidation** | Low — stale card data after update | Use Workbox's `skipWaiting` + `clientsClaim`; show "update available" prompt to user |
+| **Cross-browser webview differences (Tauri)** | Medium — Tauri uses OS webview (WebKit on macOS, WebView2 on Windows) | Test on all 3 OS; use standard CSS (no bleeding-edge features); Electron fallback if needed |
+| **Offline multiplayer sync** | Low — reconnecting after going offline mid-game | Game state is server-authoritative; client reconnects and receives full state snapshot |
 
 ---
 
-## 9. Recommended Starting Point
+## 10. Recommended Starting Point
 
 **Start with Phase 1 (Foundation) focusing on the Base Set only:**
 
@@ -435,7 +601,7 @@ This keeps scope manageable while validating the hardest part first — the game
 
 ---
 
-## 10. Summary of Card Counts
+## 11. Summary of Card Counts
 
 | Card Type | Unique Cards | With Quantities | Expansions |
 |---|---|---|---|
