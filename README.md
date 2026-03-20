@@ -1,4 +1,4 @@
-# Quest & Chronicle
+# Boss Monster
 
 A digital card game inspired by Boss Monster, built using the **Unified Boss Monster System (UBMS)** ruleset that merges all Boss Monster expansions into a single unified experience. Browser-first, installable as a PWA, and wrappable in Chromium (Tauri/Electron) for desktop distribution.
 
