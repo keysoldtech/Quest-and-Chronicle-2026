@@ -1,4 +1,7 @@
-import type { GameState, SpellCard, PendingSpell, HeroInstance } from '../data/types';
+import type {
+  GameState, SpellCard, PendingSpell, HeroInstance, PlayerState, EffectCost, CardEffect,
+  RoomCard,
+} from '../data/types';
 import { addToLog } from './game-state';
 import { drawCards } from '../utils/shuffle';
 
@@ -41,7 +44,7 @@ function resolveSpellEffect(state: GameState, pending: PendingSpell): void {
     case 'drawSpell': {
       const count = (effect.value as number) ?? 1;
       // Handle cost (e.g. Dark Pact: take 1 wound to draw 2 spells)
-      if (effect.cost) applyCost(state, player, effect.cost as any);
+      if (effect.cost) applyCost(state, player, effect.cost);
       const drawn = drawCards(state.decks.spell, count);
       for (const c of drawn) player.hand.push(c);
       addToLog(state, player.id, 'spell_effect', `${pending.card.name}: drew ${drawn.length} spell(s)`);
@@ -49,7 +52,7 @@ function resolveSpellEffect(state: GameState, pending: PendingSpell): void {
     }
     case 'drawRoom': {
       const count = (effect.value as number) ?? 1;
-      if (effect.cost) applyCost(state, player, effect.cost as any);
+      if (effect.cost) applyCost(state, player, effect.cost);
       const drawn = drawCards(state.decks.room, count);
       for (const c of drawn) player.hand.push(c);
       addToLog(state, player.id, 'spell_effect', `${pending.card.name}: drew ${drawn.length} room(s)`);
@@ -95,7 +98,8 @@ function resolveSpellEffect(state: GameState, pending: PendingSpell): void {
       break;
     }
     case 'damageAndHeal': {
-      const heal = (effect as any).heal ?? (effect as any).healValue ?? 1;
+      const ext = effect as CardEffect & { heal?: number; healValue?: number };
+      const heal = ext.heal ?? ext.healValue ?? 1;
       if (player.wounds.length > 0 && heal > 0) {
         const w = player.wounds.pop()!;
         player.souls.push(w);
@@ -104,8 +108,9 @@ function resolveSpellEffect(state: GameState, pending: PendingSpell): void {
       break;
     }
     case 'randomDamage': {
-      const min = (effect as any).min ?? 1;
-      const max = (effect as any).max ?? 6;
+      const ext = effect as CardEffect & { min?: number; max?: number };
+      const min = ext.min ?? 1;
+      const max = ext.max ?? 6;
       const roll = Math.floor(Math.random() * (max - min + 1)) + min;
       addToLog(state, player.id, 'spell_effect', `${pending.card.name}: rolled ${roll} damage!`);
       break;
@@ -232,7 +237,7 @@ function resolveSpellEffect(state: GameState, pending: PendingSpell): void {
       const cardType = effect.cardType as string ?? 'room';
       const pile = cardType === 'spell' ? state.discards.spell : state.discards.room;
       const retrieved = pile.splice(0, Math.min(count, pile.length));
-      for (const c of retrieved) player.hand.push(c as any);
+      for (const c of retrieved) player.hand.push(c as RoomCard | SpellCard);
       addToLog(state, player.id, 'spell_effect', `${pending.card.name}: retrieved ${retrieved.length} card(s) from discard`);
       break;
     }
@@ -310,7 +315,7 @@ function resolveSpellEffect(state: GameState, pending: PendingSpell): void {
   state.discards.spell.push(pending.card);
 }
 
-function applyCost(state: GameState, player: any, cost: { type: string; value?: number }): void {
+function applyCost(state: GameState, player: PlayerState, cost: EffectCost): void {
   switch (cost.type) {
     case 'wound': {
       // Take X wounds (push dummy hero cards)
@@ -336,8 +341,9 @@ function applyCost(state: GameState, player: any, cost: { type: string; value?: 
 
 function getTargetHeroes(
   state: GameState, target: string | undefined,
-  _targets: Record<string, unknown>,
+  targets: Record<string, unknown>,
 ): HeroInstance[] {
+  void targets; // reserved for future targeting (hero in dungeon, etc.)
   // Return heroes from town as default targets
   if (target === 'allHeroesInAllDungeons' || target === 'allHeroesInDungeon') {
     return [...state.town];

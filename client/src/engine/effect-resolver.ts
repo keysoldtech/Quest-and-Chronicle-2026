@@ -1,5 +1,5 @@
 import type {
-  GameState, PlayerState, RoomAbility, DungeonRoom,
+  GameState, PlayerState, RoomAbility, DungeonRoom, RoomCard, SpellCard,
 } from '../data/types';
 import { addToLog } from './game-state';
 import { drawCards } from '../utils/shuffle';
@@ -97,7 +97,7 @@ export function resolveRoomAbility(
           if (spellIdx >= 0) {
             const discarded = other.hand.splice(spellIdx, 1)[0];
             if ('spellType' in discarded) {
-              state.discards.spell.push(discarded as any);
+              state.discards.spell.push(discarded as SpellCard);
             }
           }
         }
@@ -152,8 +152,8 @@ export function resolveBossLevelUp(
         if (other.id === player.id) continue;
         for (let i = 0; i < count && other.hand.length > 0; i++) {
           const card = other.hand.pop()!;
-          if ('spellType' in card) state.discards.spell.push(card as any);
-          else state.discards.room.push(card as any);
+          if ('spellType' in card) state.discards.spell.push(card as SpellCard);
+          else state.discards.room.push(card as RoomCard);
         }
       }
       break;

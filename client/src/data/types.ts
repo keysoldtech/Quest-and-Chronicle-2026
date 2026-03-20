@@ -184,6 +184,8 @@ export interface HeroInstance {
   currentHP: number;
   attachedItem: ItemCard | null;
   turnsInTown: number;
+  /** Per-adventure flags (e.g. second pass through a "hero enters twice" room) */
+  combatScratch?: Record<string, boolean>;
 }
 
 export interface PlayerState {

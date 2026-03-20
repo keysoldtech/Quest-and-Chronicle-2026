@@ -5,7 +5,8 @@ import { GameBoard } from './ui/screens/GameBoard';
 import { GameOver } from './ui/screens/GameOver';
 import { ToastContainer } from './ui/components/Toast';
 import { HelpGuide } from './ui/components/HelpGuide';
-import { OnboardingOverlay, useOnboarding } from './ui/components/Onboarding';
+import { OnboardingOverlay } from './ui/components/Onboarding';
+import { useOnboarding } from './ui/hooks/useOnboarding';
 import { SoundManager } from './utils/sound';
 import './App.css';
 

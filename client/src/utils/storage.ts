@@ -23,8 +23,9 @@ export function save<T>(key: string, data: T, ttlMs?: number): boolean {
     };
     localStorage.setItem(PREFIX + key, JSON.stringify(envelope));
     return true;
-  } catch (e: any) {
-    if (e.name === 'QuotaExceededError') {
+  } catch (e: unknown) {
+    const name = e instanceof Error ? e.name : '';
+    if (name === 'QuotaExceededError') {
       cleanup();
       try {
         localStorage.setItem(PREFIX + key, JSON.stringify({ version: VERSION, timestamp: Date.now(), expiresAt: null, data }));

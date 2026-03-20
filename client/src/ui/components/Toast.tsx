@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
+import { setToastHandler, type ToastType } from '../toastBus';
 
-export type ToastType = 'info' | 'success' | 'error' | 'warning';
+export type { ToastType };
 
 interface ToastItem {
   id: number;
@@ -10,12 +11,6 @@ interface ToastItem {
 }
 
 let nextId = 0;
-let addToastFn: ((msg: string, type?: ToastType, duration?: number) => void) | null = null;
-
-/** Show a toast from anywhere in the app */
-export function showToast(message: string, type: ToastType = 'info', duration = 3000) {
-  addToastFn?.(message, type, duration);
-}
 
 export function ToastContainer() {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
@@ -29,8 +24,8 @@ export function ToastContainer() {
   }, []);
 
   useEffect(() => {
-    addToastFn = addToast;
-    return () => { addToastFn = null; };
+    setToastHandler(addToast);
+    return () => { setToastHandler(null); };
   }, [addToast]);
 
   return (

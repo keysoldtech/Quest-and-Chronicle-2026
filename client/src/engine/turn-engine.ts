@@ -1,5 +1,5 @@
 import type {
-  GameState, RoomCard, DungeonRoom, HeroInstance, MinibossCard,
+  GameState, RoomCard, DungeonRoom, HeroInstance, MinibossCard, PlayerState,
 } from '../data/types';
 import {
   addToLog, isDungeonFull,
@@ -164,7 +164,7 @@ export function executeBuild(state: GameState, action: BuildAction): void {
   }
 }
 
-function resolveOnDestroyAbility(state: GameState, player: any, room: DungeonRoom): void {
+function resolveOnDestroyAbility(state: GameState, player: PlayerState, room: DungeonRoom): void {
   const ability = room.card.ability;
   if (!ability || ability.trigger !== 'onDestroy') return;
 

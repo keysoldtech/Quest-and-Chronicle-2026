@@ -4,7 +4,7 @@ import type {
   PlayerState, Phase, MinibossCard,
 } from '../data/types';
 import { createInitialState } from '../engine/game-state';
-import { showToast } from '../ui/components/Toast';
+import { showToast } from '../ui/toastBus';
 import { SoundManager } from '../utils/sound';
 import {
   executeTownPhase, executeBuildPhase, executeBaitPhase,

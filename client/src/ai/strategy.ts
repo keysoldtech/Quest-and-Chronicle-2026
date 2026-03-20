@@ -1,4 +1,4 @@
-import type { GameState, PlayerState, RoomCard, SpellCard, MinibossCard } from '../data/types';
+import type { GameState, PlayerState, SpellCard, MinibossCard } from '../data/types';
 import { getRoomsInHand, getSpellsInHand, isDungeonFull, getTreasureCount } from '../engine/game-state';
 import { validateBuild, type BuildAction } from '../engine/turn-engine';
 import { canPlaySpell } from '../engine/spell-stack';
@@ -49,7 +49,7 @@ export function makeBuildDecision(
     if (!isDungeonFull(player)) {
       const err = validateBuild(state, { playerId: player.id, roomCard: room, position: 'new' });
       if (!err) {
-        const mb = pickMinibossToAttach(player, room);
+        const mb = pickMinibossToAttach(player);
         return { playerId: player.id, roomCard: room, position: 'new', attachMiniboss: mb ?? undefined };
       }
     }
@@ -125,7 +125,7 @@ export function makeSpellDecision(
   return null;
 }
 
-function pickMinibossToAttach(player: PlayerState, _room: RoomCard): MinibossCard | null {
+function pickMinibossToAttach(player: PlayerState): MinibossCard | null {
   if (player.minibossHand.length === 0) return null;
   // Attach the first available miniboss
   return player.minibossHand[0];

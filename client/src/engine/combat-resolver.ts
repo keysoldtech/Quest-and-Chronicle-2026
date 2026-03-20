@@ -125,9 +125,10 @@ export function resolveHeroCombat(
 
     // Passive: heroEntersTwice (Minotaur Maze etc.)
     if (room.card.ability?.effect === 'heroEntersTwice' && !room.isDeactivated) {
-      const secondTag = `__entered_twice_${i}`;
-      if (!(hero as any)[secondTag]) {
-        (hero as any)[secondTag] = true;
+      const secondTag = `enteredTwice_${i}`;
+      if (!hero.combatScratch?.[secondTag]) {
+        if (!hero.combatScratch) hero.combatScratch = {};
+        hero.combatScratch[secondTag] = true;
         events.push({
           type: 'enter_room', roomIndex: i, heroHP: currentHP,
           description: `${hero.card.name} must traverse ${room.card.name} again!`,

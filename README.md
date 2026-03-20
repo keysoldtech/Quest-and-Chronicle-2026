@@ -14,7 +14,7 @@ Open [http://localhost:5173](http://localhost:5173) in your browser. Pick a boss
 
 ## Project Status
 
-**Playable** — Single-player vs AI with full game loop, 20 passing engine tests, production build ready.
+**Playable** — Single-player vs AI with full game loop, 20 passing engine tests, production build ready, ESLint clean.
 
 ## How to Play
 
@@ -63,7 +63,7 @@ npm install          # Install dependencies
 npm run dev          # Dev server at localhost:5173 (hot reload)
 npm run build        # Production build to dist/
 npm run preview      # Preview production build
-npx vitest run       # Run 20 engine tests
+npm test             # Run 20 engine tests (Vitest)
 ```
 
 ## Project Structure
